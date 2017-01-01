@@ -8,8 +8,8 @@ int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1366, 768), "Project Avenue", sf::Style::Fullscreen);
 	sf::Font defaultFont;
-	sf::Texture background;
-	sf::Sprite backgroundSprite;
+	//sf::Texture background;
+	//sf::Sprite backgroundSprite;
 	player player1(sf::Vector2f(500,600));
 	weapon weapon1(1);
 	int sceneNum = 0;
@@ -20,13 +20,12 @@ int main()
 	}
 	level level1("level1.txt",defaultFont,&player1);
 
+	//if (!background.loadFromFile("background.png")) {
+		//return 2;
+	//}
 
-	if (!background.loadFromFile("background.png")) {
-		return 2;
-	}
-
-	backgroundSprite.setTexture(background);
-	backgroundSprite.setPosition(sf::Vector2f(0, 0));
+	//backgroundSprite.setTexture(background);
+	//backgroundSprite.setPosition(sf::Vector2f(0, 0));
 	mainMenu *mainM = new mainMenu(defaultFont);
 	while (window.isOpen())
 	{
@@ -35,9 +34,9 @@ int main()
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
-			if (event.type == sf::Event::Resized) {
-				sf::FloatRect screenArea(0, 0, event.size.width, event.size.height);
-				window.setView(sf::View(screenArea));
+			if (event.type == sf::Event::Resized && sceneNum == 1 && level1.subscene==1) {
+				//sf::FloatRect screenArea(0, 0, event.size.width, event.size.height);
+				//window.setView(sf::View(screenArea));
 			}
 
 		}
@@ -46,30 +45,44 @@ int main()
 			//delete[] mainM;
 			//deletedMainMenu = true;
 		}
-		window.clear();
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9)) {
+			level1.subscene = 1;
+			//delete[] mainM;
+			//deletedMainMenu = true;
+		}
+		window.clear(sf::Color::Color(20,146,210,1));
 
 		std::cout << sceneNum << "\n";
 		if (sceneNum == 0) {
-			window.draw(backgroundSprite);
+			//window.draw(backgroundSprite);
 			window.draw(mainM->titleText);
 			window.draw(mainM->startGame);
+			if (weapon1.owner == NULL) {
+				player1.possessWeapon(weapon1);
+			}
+			window.display();
 		}
 		else if (sceneNum == 1) {
 			if (level1.subscene==0) {
 				window.draw(level1.initalText);
 				window.draw(level1.heartSprite);
 				window.draw(level1.initalHeartText);
+				window.display();
 			}
-			else {
+			else if (level1.subscene==1){
+				//using views
+				//window.draw(backgroundSprite);
 				window.setView(level1.levelView);
-				window.draw(backgroundSprite);
+				window.draw(player1.playerRect);
+				window.display();
+				level1.updateView(player1);
 			}
 		}
 		else {
 			std::cout << sceneNum << "\n";
 			return 3;
 		}
-		window.display();
+
 	}
 	return 0;
 }

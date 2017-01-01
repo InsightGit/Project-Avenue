@@ -18,8 +18,8 @@ enemy::enemy(int id, sf::Vector2f position) {
 enemy::enemy(){}
 
 int enemy::attack(player playerToAttack) {
-	sf::Vector2f distance(enemyPosition.x-playerToAttack.playerPosition.x, 0);
-	while (!enemyPosition.x - playerToAttack.playerPosition.x <= enemySize+10) {
+	sf::Vector2f distance(enemyPosition.x- playerToAttack.playerRect.getPosition().x, 0);
+	while (!enemyPosition.x - playerToAttack.playerRect.getPosition().x <= enemySize+10) {
 		enemyCircle.move(sf::Vector2f(100, 0));
 	}
 	playerToAttack.attacked(attackStrength);

@@ -12,8 +12,8 @@ public:
 	sf::Vector2f playerPosition;
 	sf::RectangleShape playerRect = sf::RectangleShape(sf::Vector2f(100,20));
 
-	player();
 	player(sf::Vector2f position);
+	player();
 
 	void possessWeapon(weapon weaponToPossess);
 	void attacked(int livesToDeduct);

@@ -1,11 +1,17 @@
 #include "Player.hpp"
 #include "Weapon.hpp"
 #include "Enemy.hpp"
+#include <iostream>
 
 player::player(sf::Vector2f position) {
-	position = playerPosition;
-	playerRect.setPosition(playerPosition);
+	//position = playerPosition;
+	playerRect.setPosition(position);
 	playerRect.setFillColor(sf::Color::Black);
+	std::cout << "non-default\n";
+}
+
+player::player(){
+	std::cout << "default\n";
 }
 
 void player::possessWeapon(weapon weaponToPossess) {

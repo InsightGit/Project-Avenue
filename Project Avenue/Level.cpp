@@ -37,5 +37,15 @@ level::level(const std::string worldFileLocation,sf::Font defaultFont, player *p
 	initalHeartText.setFillColor(sf::Color::White);
 }
 void level::updateView(player mainPlayer) {
+	sf::Vector2f position(mainPlayer.playerRect.getPosition().x + 100, mainPlayer.playerRect.getPosition().y + 100);
+	levelView.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
+	levelView.reset(sf::FloatRect(position.x, position.y, 1366, 768));
+	//levelView.reset(sf::FloatRect(0, 0, 1366, 768));
 	levelView.setCenter(mainPlayer.playerPosition);
+	if (mainPlayer.playerRect.getPosition().x < 0) {
+		mainPlayer.playerRect.setPosition(0, mainPlayer.playerRect.getPosition().y);
+	}
+	if (mainPlayer.playerRect.getPosition().y < 0) {
+		mainPlayer.playerRect.setPosition(mainPlayer.playerRect.getPosition().x,0);
+	}
 }

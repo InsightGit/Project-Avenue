@@ -17,7 +17,7 @@ class level {
 	sf::Text initalHeartText;
 	sf::Texture heart;
 	sf::Sprite heartSprite;
-	sf::View levelView;
+	sf::View levelView = sf::View(sf::FloatRect(0,0,1366,768));
 	int subscene = 0;
 
 	std::vector<std::string> worldFileLines;
