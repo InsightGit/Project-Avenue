@@ -9,8 +9,9 @@ class player {
 public:
 	int lives = 3;
 	int level;
+	int walkspeed = 10;
 	sf::Vector2f playerPosition;
-	sf::RectangleShape playerRect = sf::RectangleShape(sf::Vector2f(100,20));
+	sf::RectangleShape playerRect = sf::RectangleShape(sf::Vector2f(20,100));
 
 	player(sf::Vector2f position);
 	player();

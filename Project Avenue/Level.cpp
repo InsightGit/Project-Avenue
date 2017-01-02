@@ -1,4 +1,5 @@
 #include "Level.hpp"
+#include "Enemy.hpp"
 #include <stdexcept>
 
 level::level(const std::string worldFileLocation,sf::Font defaultFont, player *player1) {
@@ -36,16 +37,36 @@ level::level(const std::string worldFileLocation,sf::Font defaultFont, player *p
 	initalHeartText.setStyle(sf::Text::Regular);
 	initalHeartText.setFillColor(sf::Color::White);
 }
-void level::updateView(player mainPlayer) {
-	sf::Vector2f position(mainPlayer.playerRect.getPosition().x + 100, mainPlayer.playerRect.getPosition().y + 100);
+void level::updateView(player mainPlayer,sf::Vector2i worldCoords) {
+	sf::Vector2f worldCoordsFloat = sf::Vector2f(worldCoords);
+	//sf::Vector2f position(mainPlayer.playerRect.getPosition().x, mainPlayer.playerRect.getPosition().y);
+	levelView.reset(sf::FloatRect(mainPlayer.playerRect.getPosition().x, mainPlayer.playerRect.getPosition().y, 1366, 768));
 	levelView.setViewport(sf::FloatRect(0, 0, 1.0f, 1.0f));
-	levelView.reset(sf::FloatRect(position.x, position.y, 1366, 768));
 	//levelView.reset(sf::FloatRect(0, 0, 1366, 768));
-	levelView.setCenter(mainPlayer.playerPosition);
+	//if (mainPlayer.playerRect.getPosition().x > position.x) {
+		//levelView.move(sf::Vector2f(mainPlayer.playerRect.getPosition().x-position.x+100,0));		
+	//}
+	//else if (mainPlayer.playerRect.getPosition().x < position.x) {
+		//levelView.move(sf::Vector2f(mainPlayer.playerRect.getPosition().x-position.x-100, 0));
+	//}
+	//else if (mainPlayer.playerRect.getPosition().y > position.y) {
+		//levelView.move(sf::Vector2f(0, mainPlayer.playerRect.getPosition().y - position.y + 100));
+	//}
+	//else if (mainPlayer.playerRect.getPosition().y < position.y) {
+		//levelView.move(sf::Vector2f(0, mainPlayer.playerRect.getPosition().y - position.y - 100));
+	//}
+	//levelView.setCenter(worldCoordsFloat);
+
 	if (mainPlayer.playerRect.getPosition().x < 0) {
 		mainPlayer.playerRect.setPosition(0, mainPlayer.playerRect.getPosition().y);
 	}
 	if (mainPlayer.playerRect.getPosition().y < 0) {
 		mainPlayer.playerRect.setPosition(mainPlayer.playerRect.getPosition().x,0);
+	}
+}
+
+int level::spawn() {
+	if (levelId == "1-1") {
+		sf::RectangleShape landRect(sf::Vector2f(4000, 600));
 	}
 }
