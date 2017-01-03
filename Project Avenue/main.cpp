@@ -101,6 +101,7 @@ int main()
 			else if (level1.subscene==1){
 				//using views
 				window.clear(sf::Color::Color(20, 146, 210, 1));
+				level1.update(&player1);
 				//window.draw(backgroundSprite);
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
@@ -141,11 +142,14 @@ int main()
 				window.draw(player1.playerRect);
 				weapon1.update();
 				window.draw(weapon1.weaponRect);
+				window.draw(level1.heartSprite);
+				window.draw(level1.initalHeartText);
 				for (int i = 0; 14 > i; i++) {
 					window.draw(level1.landRectShapes[i]);
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					window.draw(level1.levelEnemies[i].enemyCircle);
+					level1.levelEnemies[i].update(&player1);
 				}
 				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ")\n";
 				window.display();

@@ -30,6 +30,7 @@ class level {
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);
 
 	int spawn();
+	void update(player *mainPlayer);
 	void updateView(player mainPlayer, sf::Vector2i worldCoords);
 };
 #endif

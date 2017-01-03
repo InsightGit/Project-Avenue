@@ -73,5 +73,11 @@ int level::spawn() {
 		enemy enemy1(1, sf::Vector2f(1500, 600));
 		levelEnemies.push_back(enemy1);
 	}
+	heartSprite.setPosition(sf::Vector2f(1300, 50));
+	initalHeartText.setPosition(sf::Vector2f(1350, 115));
 	return 0;
+}
+
+void level::update(player *mainPlayer) {
+	initalHeartText.setString(std::to_string(mainPlayer->lives));
 }

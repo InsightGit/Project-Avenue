@@ -16,6 +16,7 @@ public:
 	int sightRadius;
 	int speed;
 	int enemySize;
+	int enemySpeed;
 	weapon *weaponPossesed;
 	sf::Vector2f enemyPosition;
 	sf::CircleShape enemyCircle;
@@ -23,12 +24,12 @@ public:
 	enemy(int id,sf::Vector2f position);
 	enemy();
 
-	void update(player currentPlayer);
+	void update(player *currentPlayer);
 	bool isAttacking();
 	int attacked(int livesToDeduct);
 
 protected:
 
-	void attack(player playerToAttack);
+	void attack(player *playerToAttack);
 };
 #endif
