@@ -6,8 +6,8 @@
 #include <vector>
 #include <SFML\Graphics.hpp>
 #include "Player.hpp"
+#include "Enemy.hpp"
 
-class enemy;
 class level {
     public:
 	std::ifstream worldFile;
@@ -23,7 +23,8 @@ class level {
 
 	std::vector<std::string> worldFileLines;
 
-	std::vector<sf::Shape> landShapes;
+	//std::vector<sf::RectangleShape> landRectShapes;
+	sf::RectangleShape landRectShapes[14];
 	std::vector<enemy> levelEnemies;
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);

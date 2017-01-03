@@ -10,10 +10,12 @@ int main()
 	sf::Font defaultFont;
 	//sf::Texture background;
 	//sf::Sprite backgroundSprite;
-	player player1(sf::Vector2f(100,600));
+	player player1(sf::Vector2f(170,600));
 	weapon weapon1(1);
 	int sceneNum = 0;
+	int playerIntersectCount = 0;
 	bool deletedMainMenu = false;
+	bool jumping = false;
 
 	if (!defaultFont.loadFromFile("default.ttf")) {
 		return 1;
@@ -30,6 +32,7 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event event;
+		sf::Clock clock;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -40,12 +43,23 @@ int main()
 			}
 
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-			player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkspeed, player1.playerRect.getPosition().y));
+		if (sceneNum == 1 && level1.subscene == 1) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkspeed, player1.playerRect.getPosition().y));
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkspeed, player1.playerRect.getPosition().y));
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				clock = sf::Clock();
+				if (!jumping) {
+					player1.positionBeforeJump = player1.playerRect.getPosition();
+				}
+				jumping = true;
+				player1.jump();
+			}
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-			player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkspeed, player1.playerRect.getPosition().y));
-		}
+
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 			sceneNum = 1;
@@ -82,12 +96,44 @@ int main()
 				window.clear(sf::Color::Color(20, 146, 210, 1));
 				//window.draw(backgroundSprite);
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
-				sf::Vector2f tempVar = player1.playerRect.getPosition();
-				level1.levelView.setCenter(tempVar);
+				level1.levelView.setCenter(player1.playerRect.getPosition());
+				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
 				window.setView(level1.levelView);
+				playerIntersectCount = 0;
+				for (int i = 0; 14 > i; i++) {
+					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
+						//if (player1.playerRect.getPosition().y == level1.landRectShapes[i].getPosition().y-200) { for now
+							playerIntersectCount++;
+						//}
+					}
+				}
+
+				player1.levelIntersectCount = playerIntersectCount;
+
+				if (playerIntersectCount == 0 && !jumping && clock.getElapsedTime() >= sf::seconds(1)) {
+ 					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x, player1.playerRect.getPosition().y + player1.jumpSpeed));
+				}
+				if (playerIntersectCount == 0 && !jumping) {
+					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x, player1.playerRect.getPosition().y + player1.jumpSpeed));
+					if (player1.playerRect.getPosition().y > 1200) {
+						player1.lives--;
+						player1.playerRect.setPosition(sf::Vector2f(170,600));
+					}
+				}
+				if (player1.playerRect.getPosition().x < 170) {
+					player1.playerRect.setPosition(170, player1.playerRect.getPosition().y); //prevents players from seeing edge
+				}
+				if (player1.playerRect.getPosition().y < 0) {
+					player1.playerRect.setPosition(player1.playerRect.getPosition().x, 170);
+				}
+				level1.spawn();
 				window.draw(player1.playerRect);
 				weapon1.update();
 				window.draw(weapon1.weaponRect);
+				for (int i = 0; 14 > i; i++) {
+					window.draw(level1.landRectShapes[i]);
+				}
+				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "\n";
 				window.display();
 			}
 		}

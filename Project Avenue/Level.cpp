@@ -1,5 +1,4 @@
 #include "Level.hpp"
-#include "Enemy.hpp"
 #include <stdexcept>
 
 level::level(const std::string worldFileLocation,sf::Font defaultFont, player *player1) {
@@ -57,16 +56,20 @@ void level::updateView(player mainPlayer,sf::Vector2i worldCoords) {
 	//}
 	//levelView.setCenter(worldCoordsFloat);
 
-	if (mainPlayer.playerRect.getPosition().x < 0) {
-		mainPlayer.playerRect.setPosition(0, mainPlayer.playerRect.getPosition().y);
-	}
-	if (mainPlayer.playerRect.getPosition().y < 0) {
-		mainPlayer.playerRect.setPosition(mainPlayer.playerRect.getPosition().x,0);
-	}
+	//if (mainPlayer.playerRect.getPosition().x < 0) {                                 <- Included
+		//mainPlayer.playerRect.setPosition(0, mainPlayer.playerRect.getPosition().y); <- in
+	//}																				   <- main.cpp
+	//if (mainPlayer.playerRect.getPosition().y < 0) {								   <-
+		//mainPlayer.playerRect.setPosition(mainPlayer.playerRect.getPosition().x,0);  <-
+	//}                                                                                <-
 }
 
 int level::spawn() {
 	if (levelId == "1-1") {
-		sf::RectangleShape landRect(sf::Vector2f(4000, 600));
+		landRectShapes[0] = sf::RectangleShape(sf::Vector2f(4000, 600));
+		landRectShapes[0].setPosition(sf::Vector2f(-600, 700));
+		landRectShapes[0].setFillColor(sf::Color::Color(0, 0, 0, 255));
+		//landRectShapes.push_back(landRect);
 	}
+	return 0;
 }

@@ -26,9 +26,10 @@ int enemy::attack(player playerToAttack) {
 	return 0;
 }
 
-void enemy::attacked(int livesToDeduct) {
+int enemy::attacked(int livesToDeduct) {
 	lives -= livesToDeduct;
 	if (lives <= 0) {
 		enemyCircle.setPosition(sf::Vector2f(-1000000000, -1000000000));
 	}
+	return 0;
 }

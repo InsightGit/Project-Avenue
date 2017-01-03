@@ -27,3 +27,17 @@ void player::attacked(int livesToDeduct) {
 	}
 }
 
+void player::jump() {
+	if(jumpState==0){
+		//playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, playerRect.getPosition().y-jumpSpeed));
+		if (playerRect.getPosition().y - positionBeforeJump.y == positionBeforeJump.y+jumpDistance) {
+			jumpState = 1;
+		}
+		else {
+			playerRect.move(0, jumpSpeed);
+		}
+	}
+	if (jumpState == 1) {
+
+	}
+}

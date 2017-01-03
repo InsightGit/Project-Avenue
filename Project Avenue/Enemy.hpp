@@ -25,7 +25,7 @@ public:
 
 	int update();
 	bool isAttacking();
-	void attacked(int livesToDeduct);
+	int attacked(int livesToDeduct);
 
 protected:
 
