@@ -70,6 +70,8 @@ int level::spawn() {
 		landRectShapes[0].setPosition(sf::Vector2f(-600, 700));
 		landRectShapes[0].setFillColor(sf::Color::Color(0, 0, 0, 255));
 		//landRectShapes.push_back(landRect);
+		enemy enemy1(1, sf::Vector2f(1500, 600));
+		levelEnemies.push_back(enemy1);
 	}
 	return 0;
 }

@@ -16,7 +16,7 @@ player::player(){
 
 void player::possessWeapon(weapon weaponToPossess) {
 	weaponToPossess.owner = this;
-	weaponToPossess.weaponRect.setPosition(sf::Vector2f(playerPosition.x + 100, playerPosition.y));
+	weaponToPossess.weaponRect.setPosition(sf::Vector2f(playerRect.getPosition().x + 100, playerRect.getPosition().y));
 	weaponToPossess.ownerType = "Player";
 }
 
@@ -30,14 +30,19 @@ void player::attacked(int livesToDeduct) {
 void player::jump() {
 	if(jumpState==0){
 		//playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, playerRect.getPosition().y-jumpSpeed));
-		if (playerRect.getPosition().y - positionBeforeJump.y == positionBeforeJump.y+jumpDistance) {
+		if (positionBeforeJump.y - playerRect.getPosition().y >= jumpDistance) {
 			jumpState = 1;
+		}
+		else {
+			playerRect.move(0, jumpSpeed / -1);
+		}
+	}
+	if (jumpState == 1) {
+		if (positionBeforeJump.y == playerRect.getPosition().y) {
+			jumpState = 2;
 		}
 		else {
 			playerRect.move(0, jumpSpeed);
 		}
-	}
-	if (jumpState == 1) {
-
 	}
 }

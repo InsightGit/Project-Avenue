@@ -45,21 +45,28 @@ int main()
 		}
 		if (sceneNum == 1 && level1.subscene == 1) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkspeed, player1.playerRect.getPosition().y));
+				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkspeed, player1.playerRect.getPosition().y));
+				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				clock = sf::Clock();
 				if (!jumping) {
 					player1.positionBeforeJump = player1.playerRect.getPosition();
+					player1.jumpState = 0;
+ 					player1.jump();
+ 					jumping = true;
 				}
-				jumping = true;
-				player1.jump();
 			}
 		}
 
+		if (player1.jumpState == 2) {
+			jumping = false;
+		}
+		if (jumping) {
+			player1.jump();
+		}
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 			sceneNum = 1;
@@ -103,23 +110,27 @@ int main()
 				for (int i = 0; 14 > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
 						//if (player1.playerRect.getPosition().y == level1.landRectShapes[i].getPosition().y-200) { for now
+						if (player1.playerRect.getPosition().x > 3400) {}
+						else {
 							playerIntersectCount++;
+						}
 						//}
 					}
 				}
 
+				if (playerIntersectCount == 0 && !jumping) {
+					if (player1.playerRect.getPosition().y > 3400) {
+						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
+					}
+					if (player1.playerRect.getPosition().y > 900) {
+						player1.lives--; 						
+						player1.playerRect.setPosition(sf::Vector2f(170, 600)); 
+					} 
+				} 
+
 				player1.levelIntersectCount = playerIntersectCount;
 
-				if (playerIntersectCount == 0 && !jumping && clock.getElapsedTime() >= sf::seconds(1)) {
- 					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x, player1.playerRect.getPosition().y + player1.jumpSpeed));
-				}
-				if (playerIntersectCount == 0 && !jumping) {
-					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x, player1.playerRect.getPosition().y + player1.jumpSpeed));
-					if (player1.playerRect.getPosition().y > 1200) {
-						player1.lives--;
-						player1.playerRect.setPosition(sf::Vector2f(170,600));
-					}
-				}
+
 				if (player1.playerRect.getPosition().x < 170) {
 					player1.playerRect.setPosition(170, player1.playerRect.getPosition().y); //prevents players from seeing edge
 				}
@@ -133,7 +144,10 @@ int main()
 				for (int i = 0; 14 > i; i++) {
 					window.draw(level1.landRectShapes[i]);
 				}
-				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "\n";
+				for (int i = 0; level1.levelEnemies.size() > i; i++) {
+					window.draw(level1.levelEnemies[i].enemyCircle);
+				}
+				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ")\n";
 				window.display();
 			}
 		}

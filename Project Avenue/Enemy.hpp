@@ -23,12 +23,12 @@ public:
 	enemy(int id,sf::Vector2f position);
 	enemy();
 
-	int update();
+	void update(player currentPlayer);
 	bool isAttacking();
 	int attacked(int livesToDeduct);
 
 protected:
 
-	int attack(player playerToAttack);
+	void attack(player playerToAttack);
 };
 #endif
