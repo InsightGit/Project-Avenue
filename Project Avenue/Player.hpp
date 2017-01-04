@@ -13,7 +13,7 @@ public:
 	int jumpSpeed = 20;
 	int levelIntersectCount;
 	int jumpState = 0;
-	int jumpDistance = 100;
+	int jumpDistance = 150;
 	sf::Vector2f positionBeforeJump;
 
 	//sf::Vector2f playerPosition;
@@ -24,6 +24,6 @@ public:
 
 	void possessWeapon(weapon *weaponToPossess);
 	void attacked(int livesToDeduct);
-	void jump(float *timer);
+	void jump(float *timer, int *playerIntersectCount);
 };
 #endif

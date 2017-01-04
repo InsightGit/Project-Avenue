@@ -13,18 +13,22 @@ class level {
 	std::ifstream worldFile;
 	std::string levelId;
 	bool drawBackground = false;
+	bool levelSpawned = false;
 	sf::Font initalFont;
 	sf::Text initalText;
 	sf::Text initalHeartText;
+	sf::Text levelTimeHUD;
 	sf::Texture heart;
 	sf::Sprite heartSprite;
 	sf::View levelView = sf::View(sf::FloatRect(0, 76800,1366,768));
+	sf::Clock levelTime;
 	int subscene = 0;
 
 	std::vector<std::string> worldFileLines;
 
 	//std::vector<sf::RectangleShape> landRectShapes;
 	std::vector<sf::RectangleShape> landRectShapes;
+	int landRectShapesSize = -1;
 	std::vector<enemy> levelEnemies;
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);

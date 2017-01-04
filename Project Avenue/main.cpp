@@ -3,6 +3,7 @@
 #include "Player.hpp"
 #include "Weapon.hpp"
 #include <iostream>
+#include <thread>
 
 int main()
 {
@@ -14,9 +15,14 @@ int main()
 	weapon weapon1(1);
 	int sceneNum = 0;
 	int playerIntersectCount = 0;
+	int pastPosFrameCount = 0;
 	bool deletedMainMenu = false;
 	bool jumping = false;
+	bool movingRightPermitted = true;
+	bool movingLeftPermitted = true;
+	bool firstTimeSpawn = true;
 	sf::Clock clock;
+	sf::Vector2f pastPos;
 	float timer = 0;
 
 	if (!defaultFont.loadFromFile("default.ttf")) {
@@ -45,19 +51,27 @@ int main()
 			}
 
 		}
+
+		pastPos = player1.playerRect.getPosition();
+
+
 		if (sceneNum == 1 && level1.subscene == 1) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
+				if (movingLeftPermitted) {
+					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
+				}
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
+				if (movingRightPermitted) {
+					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
+				}
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
 				if (!jumping) {
 					player1.positionBeforeJump = player1.playerRect.getPosition();
 					player1.jumpState = 0;
 					timer = 1.0f;
- 					player1.jump(&timer);
+ 					player1.jump(&timer,&playerIntersectCount);
  					jumping = true;
 				}
 			}
@@ -68,7 +82,7 @@ int main()
 		}
 		if (jumping) {
 			timer -= clock.getElapsedTime().asSeconds()*1500;
-			player1.jump(&timer);
+			player1.jump(&timer, &playerIntersectCount);
 		}
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
@@ -100,12 +114,22 @@ int main()
 				window.draw(level1.heartSprite);
 				window.draw(level1.initalHeartText);
 				window.display();
+				if (!level1.levelSpawned) {
+					if (level1.spawn() != 0) {
+						return 4;
+					}
+				}
 			}
 			else if (level1.subscene==1){
+				if (firstTimeSpawn) {
+					level1.levelTime = sf::Clock();
+					firstTimeSpawn = false;
+				}
 				//using views
 				window.clear(sf::Color::Color(20, 146, 210, 1));
 				level1.update(&player1);
 				//window.draw(backgroundSprite);
+				window.draw();
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
 				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
@@ -115,10 +139,32 @@ int main()
 
 				window.setView(level1.levelView);
 				playerIntersectCount = 0;
-				for (int i = 0; level1.landRectShapes.size() > i; i++) {
+				for (int i = 0; level1.landRectShapesSize > i; i++) {
+					if (i == 2) {
+						break;
+					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
-						if (player1.playerRect.getPosition().y == level1.landRectShapes[i].getPosition().y-200) {
-							playerIntersectCount++;
+						if (i == 0) {
+							if (player1.playerRect.getPosition().y - 20 >= level1.landRectShapes[i].getPosition().y - 100) {
+								playerIntersectCount++;
+								movingRightPermitted = true;
+								movingLeftPermitted = true;
+							}
+						}
+						else {
+							movingRightPermitted = true;
+							movingLeftPermitted = true;
+ 							if (pastPos.x > level1.landRectShapes[i].getGlobalBounds().width && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height) {
+								//if (!player1.playerRect.getPosition().y > level1.landRectShapes[i].getGlobalBounds().height+1) {
+									movingRightPermitted = false;
+								//}
+							}
+							if (pastPos.x < level1.landRectShapes[i].getGlobalBounds().width && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height) {
+								movingLeftPermitted = false;
+							}
+							if (player1.playerRect.getPosition().y-20 >= level1.landRectShapes[i].getPosition().y - 100) {
+								playerIntersectCount++;
+							}
 						}
 					}
 				}
@@ -126,7 +172,7 @@ int main()
 
 				if (playerIntersectCount == 0 && !jumping) {
 						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
-					if (player1.playerRect.getPosition().y > 900) {
+					if (player1.playerRect.getPosition().y > 850) {
 						player1.lives--; 						
 						player1.playerRect.setPosition(sf::Vector2f(170, 600)); 
 					} 
@@ -141,7 +187,8 @@ int main()
 				if (player1.playerRect.getPosition().y < 0) {
 					player1.playerRect.setPosition(player1.playerRect.getPosition().x, 170);
 				}
-				level1.spawn();
+
+
 
 				weapon1.update();
 				window.draw(weapon1.weaponRect);

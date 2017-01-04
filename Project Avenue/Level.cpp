@@ -70,20 +70,33 @@ int level::spawn() {
 		landRect1.setPosition(sf::Vector2f(-600, 700));
 		landRect1.setFillColor(sf::Color::Green);
 		landRectShapes.push_back(landRect1);
+		landRectShapesSize++;
 
-		sf::RectangleShape landRect2 = sf::RectangleShape(sf::Vector2f(100, 100));
-		landRect2.setPosition(sf::Vector2f(400, 600));
+		sf::RectangleShape landRect2 = sf::RectangleShape(sf::Vector2f(100, 99));
+		landRect2.setPosition(sf::Vector2f(400, 601));
 		landRect2.setFillColor(sf::Color::Color(8, 253, 36, 255));
+		landRectShapesSize++;
 		landRectShapes.push_back(landRect2);
 
 		enemy enemy1(1, sf::Vector2f(1500, 600));
 		levelEnemies.push_back(enemy1);
+
+		levelTimeHUD.setFont(initalFont);
+		if (levelTime.getElapsedTime().asSeconds() % 60) {
+			//minute time
+		}
+		levelTimeHUD.setString(std::to_string(sf::Clock));
+		levelTimeHUD.setPosition(sf::Vector2f(630, 565));
+		levelTimeHUD.setCharacterSize(30);
+		levelTimeHUD.setStyle(sf::Text::Regular);
+		levelTimeHUD.setFillColor(sf::Color::White);
 	}
-	heartSprite.setPosition(sf::Vector2f(1300, 50));
-	initalHeartText.setPosition(sf::Vector2f(1350, 115));
+
 	return 0;
 }
 
 void level::update(player *mainPlayer) {
 	initalHeartText.setString(std::to_string(mainPlayer->lives));
+	heartSprite.setPosition(sf::Vector2f(1300, 50));
+	initalHeartText.setPosition(sf::Vector2f(1350, 115));
 }
