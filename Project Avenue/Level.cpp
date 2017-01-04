@@ -66,10 +66,16 @@ void level::updateView(player mainPlayer,sf::Vector2i worldCoords) {
 
 int level::spawn() {
 	if (levelId == "1-1") {
-		landRectShapes[0] = sf::RectangleShape(sf::Vector2f(4000, 600));
-		landRectShapes[0].setPosition(sf::Vector2f(-600, 700));
-		landRectShapes[0].setFillColor(sf::Color::Color(0, 0, 0, 255));
-		//landRectShapes.push_back(landRect);
+		sf::RectangleShape landRect1 = sf::RectangleShape(sf::Vector2f(4000, 600));
+		landRect1.setPosition(sf::Vector2f(-600, 700));
+		landRect1.setFillColor(sf::Color::Green);
+		landRectShapes.push_back(landRect1);
+
+		sf::RectangleShape landRect2 = sf::RectangleShape(sf::Vector2f(100, 100));
+		landRect2.setPosition(sf::Vector2f(400, 600));
+		landRect2.setFillColor(sf::Color::Color(8, 253, 36, 255));
+		landRectShapes.push_back(landRect2);
+
 		enemy enemy1(1, sf::Vector2f(1500, 600));
 		levelEnemies.push_back(enemy1);
 	}

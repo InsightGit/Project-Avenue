@@ -22,8 +22,8 @@ public:
 	player(sf::Vector2f position);
 	player();
 
-	void possessWeapon(weapon weaponToPossess);
+	void possessWeapon(weapon *weaponToPossess);
 	void attacked(int livesToDeduct);
-	void jump();
+	void jump(float *timer);
 };
 #endif

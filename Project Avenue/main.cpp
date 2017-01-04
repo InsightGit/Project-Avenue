@@ -16,6 +16,8 @@ int main()
 	int playerIntersectCount = 0;
 	bool deletedMainMenu = false;
 	bool jumping = false;
+	sf::Clock clock;
+	float timer = 0;
 
 	if (!defaultFont.loadFromFile("default.ttf")) {
 		return 1;
@@ -51,11 +53,11 @@ int main()
 				player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-				clock = sf::Clock();
 				if (!jumping) {
 					player1.positionBeforeJump = player1.playerRect.getPosition();
 					player1.jumpState = 0;
- 					player1.jump();
+					timer = 1.0f;
+ 					player1.jump(&timer);
  					jumping = true;
 				}
 			}
@@ -65,7 +67,8 @@ int main()
 			jumping = false;
 		}
 		if (jumping) {
-			player1.jump();
+			timer -= clock.getElapsedTime().asSeconds()*1500;
+			player1.jump(&timer);
 		}
 		
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
@@ -86,7 +89,7 @@ int main()
 			window.draw(mainM->titleText);
 			window.draw(mainM->startGame);
 			if (weapon1.owner == NULL) {
-				player1.possessWeapon(weapon1);
+				player1.possessWeapon(&weapon1);
 			}
 			window.display();
 		}
@@ -106,23 +109,23 @@ int main()
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
 				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
+
+				//window.draw(level1.heartSprite);
+				//swindow.draw(level1.initalHeartText);
+
 				window.setView(level1.levelView);
 				playerIntersectCount = 0;
-				for (int i = 0; 14 > i; i++) {
+				for (int i = 0; level1.landRectShapes.size() > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
-						//if (player1.playerRect.getPosition().y == level1.landRectShapes[i].getPosition().y-200) { for now
-						if (player1.playerRect.getPosition().x > 3400) {}
-						else {
+						if (player1.playerRect.getPosition().y == level1.landRectShapes[i].getPosition().y-200) {
 							playerIntersectCount++;
 						}
-						//}
 					}
 				}
+				
 
 				if (playerIntersectCount == 0 && !jumping) {
-					if (player1.playerRect.getPosition().y > 3400) {
 						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
-					}
 					if (player1.playerRect.getPosition().y > 900) {
 						player1.lives--; 						
 						player1.playerRect.setPosition(sf::Vector2f(170, 600)); 
@@ -139,19 +142,22 @@ int main()
 					player1.playerRect.setPosition(player1.playerRect.getPosition().x, 170);
 				}
 				level1.spawn();
-				window.draw(player1.playerRect);
+
 				weapon1.update();
 				window.draw(weapon1.weaponRect);
-				window.draw(level1.heartSprite);
-				window.draw(level1.initalHeartText);
-				for (int i = 0; 14 > i; i++) {
+				window.draw(player1.playerRect);
+
+				for (int i = 0; level1.landRectShapes.size() > i; i++) {
 					window.draw(level1.landRectShapes[i]);
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					window.draw(level1.levelEnemies[i].enemyCircle);
 					level1.levelEnemies[i].update(&player1);
 				}
-				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ")\n";
+				#ifdef _DEBUG
+				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ") Time:" << std::to_string(timer) << "\n";
+				std::cout << "WeaponPosition: (" << weapon1.weaponRect.getPosition().x << "," << weapon1.weaponRect.getPosition().y << ")\n";
+				#endif
 				window.display();
 			}
 		}
@@ -159,7 +165,7 @@ int main()
 			std::cout << sceneNum << "\n";
 			return 3;
 		}
-
+		clock.restart();
 	}
 	return 0;
 }

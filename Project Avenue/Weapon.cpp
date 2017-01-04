@@ -6,10 +6,10 @@ weapon::weapon(){}
 
 weapon::weapon(int id) {
 		if(id==1){
-			name = "Sword of Black";
+			name = "Sword of Grey";
 			strength = 1;
 			weaponRect = sf::RectangleShape(sf::Vector2f(15,30));
-			weaponRect.setFillColor(sf::Color::Color(220, 135, 46, 1));
+			weaponRect.setFillColor(sf::Color::Color(147, 154, 153, 0.99));
 		}
 		else {
 			throw std::runtime_error("Unknown weapon id");
@@ -18,7 +18,7 @@ weapon::weapon(int id) {
 
 void weapon::update() {
 	if (ownerType == "Player") {
-		weaponRect.setPosition(sf::Vector2f(owner->playerRect.getPosition().x + 100, owner->playerRect.getPosition().y));
+		weaponRect.setPosition(sf::Vector2f(owner->playerRect.getPosition().x + 20, owner->playerRect.getPosition().y));
 	}
 	else if (ownerType == "Enemy") {
 		weaponRect.setPosition(sf::Vector2f(enemyOwner->enemyPosition.x + enemyOwner->enemySize, enemyOwner->enemyPosition.y));

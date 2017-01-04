@@ -24,7 +24,7 @@ class level {
 	std::vector<std::string> worldFileLines;
 
 	//std::vector<sf::RectangleShape> landRectShapes;
-	sf::RectangleShape landRectShapes[14];
+	std::vector<sf::RectangleShape> landRectShapes;
 	std::vector<enemy> levelEnemies;
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);
