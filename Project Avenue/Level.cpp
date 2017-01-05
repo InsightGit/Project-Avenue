@@ -1,4 +1,5 @@
 #include "Level.hpp"
+#include "Gem.hpp"
 #include <stdexcept>
 
 level::level(const std::string worldFileLocation,sf::Font defaultFont, player *player1) {
@@ -78,18 +79,32 @@ int level::spawn() {
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect2);
 
+		sf::RectangleShape landRect3 = sf::RectangleShape(sf::Vector2f(100, 199));
+		landRect3.setPosition(sf::Vector2f(600, 501));
+		landRect3.setFillColor(sf::Color::Color(8, 253, 36, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect3);
+
 		enemy enemy1(1, sf::Vector2f(1500, 600));
 		levelEnemies.push_back(enemy1);
 
+		gem gem1(1, sf::Vector2f(1000,600));
+		levelGems.push_back(gem1);
+
 		levelTimeHUD.setFont(initalFont);
-		if (levelTime.getElapsedTime().asSeconds() % 60) {
-			//minute time
-		}
-		levelTimeHUD.setString(std::to_string(sf::Clock));
 		levelTimeHUD.setPosition(sf::Vector2f(630, 565));
 		levelTimeHUD.setCharacterSize(30);
 		levelTimeHUD.setStyle(sf::Text::Regular);
 		levelTimeHUD.setFillColor(sf::Color::White);
+
+		if (int(levelTime.getElapsedTime().asSeconds()) % 60) {
+			//minute time
+			levelTimeHUD.setString(int(levelTime.getElapsedTime().asSeconds())/60 + ":" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+		}
+		else {
+			levelTimeHUD.setString("00:" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+		}
+
 	}
 
 	return 0;
@@ -99,4 +114,13 @@ void level::update(player *mainPlayer) {
 	initalHeartText.setString(std::to_string(mainPlayer->lives));
 	heartSprite.setPosition(sf::Vector2f(1300, 50));
 	initalHeartText.setPosition(sf::Vector2f(1350, 115));
+	if (int(levelTime.getElapsedTime().asSeconds()) % 60) {
+		//minute time
+		levelTimeHUD.setString(int(levelTime.getElapsedTime().asSeconds()) / 60 + ":" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+	}
+	else {
+		levelTimeHUD.setString("00:" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+	}
 }
+
+void level::onComplete(){}

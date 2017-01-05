@@ -1,13 +1,19 @@
 #include "Player.hpp"
 #include "Weapon.hpp"
 #include "Enemy.hpp"
+#include "Level.hpp"
 #include <iostream>
 
 player::player(sf::Vector2f position) {
 	//position = playerPosition;
 	playerRect.setPosition(position);
 	playerRect.setFillColor(sf::Color::Black);
-	std::cout << "non-default\n";
+}
+
+player::player(sf::Vector2f position, level *mainLevel) {
+	currentLevel = mainLevel;
+	playerRect.setPosition(position);
+	playerRect.setFillColor(sf::Color::Black);
 }
 
 player::player(){

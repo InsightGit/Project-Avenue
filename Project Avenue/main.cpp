@@ -29,6 +29,7 @@ int main()
 		return 1;
 	}
 	level level1("level1.txt",defaultFont,&player1);
+	player1.currentLevel = &level1;
 
 	//if (!background.loadFromFile("background.png")) {
 		//return 2;
@@ -129,7 +130,7 @@ int main()
 				window.clear(sf::Color::Color(20, 146, 210, 1));
 				level1.update(&player1);
 				//window.draw(backgroundSprite);
-				window.draw();
+				//window.draw();
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
 				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
@@ -140,7 +141,7 @@ int main()
 				window.setView(level1.levelView);
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 2) {
+					if (i == 3) {
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
@@ -154,12 +155,12 @@ int main()
 						else {
 							movingRightPermitted = true;
 							movingLeftPermitted = true;
- 							if (pastPos.x > level1.landRectShapes[i].getGlobalBounds().width && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height) {
+ 							if (player1.playerRect.getPosition().x-20 <= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
 								//if (!player1.playerRect.getPosition().y > level1.landRectShapes[i].getGlobalBounds().height+1) {
 									movingRightPermitted = false;
 								//}
 							}
-							if (pastPos.x < level1.landRectShapes[i].getGlobalBounds().width && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height) {
+							if (player1.playerRect.getPosition().x-20 >= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
 								movingLeftPermitted = false;
 							}
 							if (player1.playerRect.getPosition().y-20 >= level1.landRectShapes[i].getPosition().y - 100) {
@@ -168,7 +169,12 @@ int main()
 						}
 					}
 				}
-				
+				for (int i = 0; level1.levelGems.size() > i; i++) {
+					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
+						level1.levelGems[i].onCollect(&player1);
+					}
+				}
+
 
 				if (playerIntersectCount == 0 && !jumping) {
 						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
@@ -200,6 +206,9 @@ int main()
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					window.draw(level1.levelEnemies[i].enemyCircle);
 					level1.levelEnemies[i].update(&player1);
+				}
+				for (int i = 0; level1.levelGems.size() > i; i++) {
+					window.draw(level1.levelGems[i].gemSprite);
 				}
 				#ifdef _DEBUG
 				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ") Time:" << std::to_string(timer) << "\n";

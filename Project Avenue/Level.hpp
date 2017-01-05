@@ -7,7 +7,9 @@
 #include <SFML\Graphics.hpp>
 #include "Player.hpp"
 #include "Enemy.hpp"
+#include "Gem.hpp"
 
+//class gem;
 class level {
     public:
 	std::ifstream worldFile;
@@ -30,11 +32,13 @@ class level {
 	std::vector<sf::RectangleShape> landRectShapes;
 	int landRectShapesSize = -1;
 	std::vector<enemy> levelEnemies;
+	std::vector<gem> levelGems;
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);
 
 	int spawn();
 	void update(player *mainPlayer);
 	void updateView(player mainPlayer, sf::Vector2i worldCoords);
+	void onComplete();
 };
 #endif

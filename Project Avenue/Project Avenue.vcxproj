@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="Gem.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
@@ -28,6 +29,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.hpp" />
+    <ClInclude Include="Gem.hpp" />
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="MainMenu.hpp" />
     <ClInclude Include="Player.hpp" />
