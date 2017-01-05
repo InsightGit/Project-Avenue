@@ -56,5 +56,11 @@
     <ClInclude Include="Gem.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SpecialLand.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Zipline.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

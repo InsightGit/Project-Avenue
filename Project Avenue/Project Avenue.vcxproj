@@ -33,7 +33,9 @@
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="MainMenu.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="SpecialLand.hpp" />
     <ClInclude Include="Weapon.hpp" />
+    <ClInclude Include="Zipline.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{3e4f5328-d936-4027-a445-66f3fcf5f5a7}</ProjectGuid>

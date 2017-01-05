@@ -41,10 +41,19 @@ int enemy::attacked(int livesToDeduct) {
 	return 0;
 }
 
-void enemy::update(player *currentPlayer) {
-	if (currentPlayer->playerRect.getPosition().x - enemyCircle.getPosition().x <= sightRadius) {
+void enemy::update(bool collided) {
+	/* if (currentPlayer->playerRect.getPosition().x - enemyCircle.getPosition().x <= sightRadius) {
 		if (!currentPlayer->playerRect.getPosition().x - enemyCircle.getPosition().x > -15) {
 			attack(currentPlayer);
 		}
+	} */
+	if (collided) {
+		if (moving == 'l') {
+			moving = 'r';
+		}
+		else if (moving == 'r') {
+			moving = 'l';
+		}
 	}
+
 }

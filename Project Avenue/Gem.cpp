@@ -14,7 +14,7 @@ gem::gem(int id, sf::Vector2f position) {
 	}
 }
 
-gem::gem(int id, std::string *customTextureLocation, sf::Vector2f position) {
+gem::gem(int id, const std::string *customTextureLocation, sf::Vector2f position) {
 	if (id == 1) {
 		gemValue = 1;
 		if (!gemTexture.loadFromFile(*customTextureLocation) != 0) {
@@ -23,6 +23,18 @@ gem::gem(int id, std::string *customTextureLocation, sf::Vector2f position) {
 		gemSprite.setTexture(gemTexture);
 		gemSprite.setPosition(position);
 	}
+}
+
+void gem::onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay) {
+	if (id == 2 && gemValue == -1) {
+		playerToAddTo->currentLevel->onComplete();
+	}
+	else {
+		playerToAddTo->coinCount += gemValue;
+	}
+	coinCollectSound.setBuffer(*soundBufferToPlay);
+	gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
+	coinCollectSound.play();
 }
 
 void gem::onCollect(player *playerToAddTo) {

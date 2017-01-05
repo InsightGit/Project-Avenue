@@ -123,4 +123,6 @@ void level::update(player *mainPlayer) {
 	}
 }
 
-void level::onComplete(){}
+void level::onComplete() {
+
+}

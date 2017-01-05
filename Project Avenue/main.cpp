@@ -4,11 +4,18 @@
 #include "Weapon.hpp"
 #include <iostream>
 #include <thread>
+#include <chrono>
+#include <cstdio>
+typedef std::chrono::high_resolution_clock Clock;
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(136600, 76800), "Project Avenue",sf::Style::Fullscreen);
 	sf::Font defaultFont;
+	sf::SoundBuffer coinCollectBuffer;
+	if (!coinCollectBuffer.loadFromFile("CoinPickup.ogg")) {
+		return 5;
+	}
 	//sf::Texture background;
 	//sf::Sprite backgroundSprite;
 	player player1(sf::Vector2f(170,600));
@@ -38,6 +45,7 @@ int main()
 	//backgroundSprite.setTexture(background);
 	//backgroundSprite.setPosition(sf::Vector2f(0, 0));
 	mainMenu *mainM = new mainMenu(defaultFont);
+	std::clock_t timerStart = std::clock();
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -169,19 +177,20 @@ int main()
 						}
 					}
 				}
+				if (player1.playerRect.getPosition().y > 850) {
+					player1.lives--;
+					player1.playerRect.setPosition(sf::Vector2f(170, 600));
+				}
+
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
-						level1.levelGems[i].onCollect(&player1);
+						level1.levelGems[i].onCollect(&player1,&coinCollectBuffer);
 					}
 				}
 
 
 				if (playerIntersectCount == 0 && !jumping) {
 						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
-					if (player1.playerRect.getPosition().y > 850) {
-						player1.lives--; 						
-						player1.playerRect.setPosition(sf::Vector2f(170, 600)); 
-					} 
 				} 
 
 				player1.levelIntersectCount = playerIntersectCount;
@@ -194,8 +203,6 @@ int main()
 					player1.playerRect.setPosition(player1.playerRect.getPosition().x, 170);
 				}
 
-
-
 				weapon1.update();
 				window.draw(weapon1.weaponRect);
 				window.draw(player1.playerRect);
@@ -204,8 +211,28 @@ int main()
 					window.draw(level1.landRectShapes[i]);
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
+					double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
+					for (int c = 0; level1.landRectShapesSize > c; c++) {
+						if (i == 3) {
+							break;
+						}
+						if (level1.levelEnemies[i].enemyCircle.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
+							level1.levelEnemies[i].update(true);
+						}
+						else {
+							level1.levelEnemies[i].update(false);
+						}
+					}
+					
+					if (level1.levelEnemies[i].moving == 'l' && timerDuration>=1) {
+						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed / -1, 0));
+						timerDuration = 0;
+					}
+					else if (level1.levelEnemies[i].moving == 'r' && timerDuration >= 1) {
+						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed, 0));
+						timerDuration = 0;
+					}
 					window.draw(level1.levelEnemies[i].enemyCircle);
-					level1.levelEnemies[i].update(&player1);
 				}
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					window.draw(level1.levelGems[i].gemSprite);
