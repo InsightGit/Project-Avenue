@@ -65,7 +65,7 @@ void level::updateView(player mainPlayer,sf::Vector2i worldCoords) {
 	//}                                                                                <-
 }
 
-int level::spawn() {
+int level::spawn(player *playerInLevel) {
 	if (levelId == "1-1") {
 		sf::RectangleShape landRect1 = sf::RectangleShape(sf::Vector2f(4000, 600));
 		landRect1.setPosition(sf::Vector2f(-600, 700));
@@ -92,7 +92,7 @@ int level::spawn() {
 		levelGems.push_back(gem1);
 
 		levelTimeHUD.setFont(initalFont);
-		levelTimeHUD.setPosition(sf::Vector2f(630, 565));
+		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+300, playerInLevel->playerRect.getPosition().y-300));
 		levelTimeHUD.setCharacterSize(30);
 		levelTimeHUD.setStyle(sf::Text::Regular);
 		levelTimeHUD.setFillColor(sf::Color::White);
@@ -114,13 +114,23 @@ void level::update(player *mainPlayer) {
 	initalHeartText.setString(std::to_string(mainPlayer->lives));
 	heartSprite.setPosition(sf::Vector2f(1300, 50));
 	initalHeartText.setPosition(sf::Vector2f(1350, 115));
-	if (int(levelTime.getElapsedTime().asSeconds()) % 60) {
+	if (int(levelTime.getElapsedTime().asSeconds()) >= 60) {
 		//minute time
-		levelTimeHUD.setString(int(levelTime.getElapsedTime().asSeconds()) / 60 + ":" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+		int levelSecs = levelTime.getElapsedTime().asSeconds();
+		if (levelSecs%60==0) {
+			levelTimeHUDMinute = levelSecs / 60;
+		}
+		levelTimeHUD.setString(levelTimeHUDMinute + ":" + std::to_string(levelSecs));
 	}
 	else {
-		levelTimeHUD.setString("00:" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+		if (int(levelTime.getElapsedTime().asSeconds() < 10)) {
+			levelTimeHUD.setString("00:0" + std::to_string(int(levelTime.getElapsedTime().asSeconds())));
+		}
+		else {
+			levelTimeHUD.setString("00:" + std::to_string(int(levelTime.getElapsedTime().asSeconds())));
+		}
 	}
+	levelTimeHUD.setPosition(sf::Vector2f(mainPlayer->playerRect.getPosition().x + 300, mainPlayer->playerRect.getPosition().y - 300));
 }
 
 void level::onComplete() {

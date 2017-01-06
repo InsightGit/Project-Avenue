@@ -20,6 +20,7 @@ class level {
 	sf::Text initalText;
 	sf::Text initalHeartText;
 	sf::Text levelTimeHUD;
+	int levelTimeHUDMinute = 1;
 	sf::Texture heart;
 	sf::Sprite heartSprite;
 	sf::View levelView = sf::View(sf::FloatRect(0, 76800,1366,768));
@@ -36,7 +37,7 @@ class level {
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);
 
-	int spawn();
+	int spawn(player *playerPosition);
 	void update(player *mainPlayer);
 	void updateView(player mainPlayer, sf::Vector2i worldCoords);
 	void onComplete();

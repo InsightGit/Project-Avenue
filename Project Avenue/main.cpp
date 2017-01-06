@@ -6,15 +6,22 @@
 #include <thread>
 #include <chrono>
 #include <cstdio>
+#include <cmath>
 typedef std::chrono::high_resolution_clock Clock;
+
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(136600, 76800), "Project Avenue",sf::Style::Fullscreen);
 	sf::Font defaultFont;
+	sf::Sound lostLifesound;
 	sf::SoundBuffer coinCollectBuffer;
 	if (!coinCollectBuffer.loadFromFile("CoinPickup.ogg")) {
 		return 5;
+	}
+	sf::SoundBuffer lostLifeBuffer;
+	if (!lostLifeBuffer.loadFromFile("lostLife.ogg")) {
+		return 6;
 	}
 	//sf::Texture background;
 	//sf::Sprite backgroundSprite;
@@ -49,7 +56,6 @@ int main()
 	while (window.isOpen())
 	{
 		sf::Event event;
-		sf::Clock clock;
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
@@ -124,7 +130,7 @@ int main()
 				window.draw(level1.initalHeartText);
 				window.display();
 				if (!level1.levelSpawned) {
-					if (level1.spawn() != 0) {
+					if (level1.spawn(&player1) != 0) {
 						return 4;
 					}
 				}
@@ -138,7 +144,6 @@ int main()
 				window.clear(sf::Color::Color(20, 146, 210, 1));
 				level1.update(&player1);
 				//window.draw(backgroundSprite);
-				//window.draw();
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
 				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
@@ -147,6 +152,9 @@ int main()
 				//swindow.draw(level1.initalHeartText);
 
 				window.setView(level1.levelView);
+
+				window.draw(level1.levelTimeHUD);
+
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
 					if (i == 3) {
@@ -179,7 +187,9 @@ int main()
 				}
 				if (player1.playerRect.getPosition().y > 850) {
 					player1.lives--;
+					lostLifesound.setBuffer(lostLifeBuffer);
 					player1.playerRect.setPosition(sf::Vector2f(170, 600));
+					lostLifesound.play();
 				}
 
 				for (int i = 0; level1.levelGems.size() > i; i++) {
@@ -212,6 +222,7 @@ int main()
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
+					std::cout << timerDuration << "\n";
 					for (int c = 0; level1.landRectShapesSize > c; c++) {
 						if (i == 3) {
 							break;
@@ -224,6 +235,13 @@ int main()
 						}
 					}
 					
+					if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
+						player1.lives--;
+						lostLifesound.setBuffer(lostLifeBuffer);
+						player1.playerRect.setPosition(sf::Vector2f(170, 600));
+						lostLifesound.play();
+					}
+
 					if (level1.levelEnemies[i].moving == 'l' && timerDuration>=1) {
 						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed / -1, 0));
 						timerDuration = 0;

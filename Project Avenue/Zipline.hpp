@@ -7,5 +7,5 @@ class zipland : specialLand {
 	sf::Vector2f endCoords;
 	sf::RectangleShape lineToRideOn;
 
-	void onRetrivePlayer(player *ridingPlayer)
+	void onRetrivePlayer(player *ridingPlayer);
 };
