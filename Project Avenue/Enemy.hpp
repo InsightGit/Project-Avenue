@@ -18,7 +18,9 @@ public:
 	int enemySize;
 	int enemySpeed;
 	char moving = 'l';
+	bool limitDirectionChanges = false;
 
+	sf::Vector2f pastCollison;
 	weapon *weaponPossesed;
 	sf::Vector2f enemyPosition;
 	sf::CircleShape enemyCircle;
@@ -26,7 +28,7 @@ public:
 	enemy(int id,sf::Vector2f position);
 	enemy();
 
-	void update(bool collided);
+	void update(bool collided, sf::Vector2f collisionPoint);
 	//bool isAttacking();
 	int attacked(int livesToDeduct);
 

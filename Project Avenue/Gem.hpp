@@ -11,6 +11,8 @@ public:
 	sf::Sound coinCollectSound;
 	sf::Texture gemTexture;
 	sf::Sprite gemSprite;
+	bool protectGem = false;
+	bool isContained = false;
 
 	gem();
 	gem(int id, sf::Vector2f position);

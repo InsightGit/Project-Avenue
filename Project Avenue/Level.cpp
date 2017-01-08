@@ -84,18 +84,56 @@ int level::spawn(player *playerInLevel) {
 		landRect3.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect3);
+		
+		sf::RectangleShape landRect4 = sf::RectangleShape(sf::Vector2f(300,100));
+		landRect4.setPosition(sf::Vector2f(1200,600));
+		landRect4.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect4);
+
+		sf::RectangleShape landRect5 = sf::RectangleShape(sf::Vector2f(100, 50));
+		landRect5.setPosition(sf::Vector2f(3500, 700));
+		landRect5.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect5);
 
 		enemy enemy1(1, sf::Vector2f(1500, 600));
 		levelEnemies.push_back(enemy1);
 
+		if (!gemTexture.loadFromFile("gem.png")) {
+			throw std::runtime_error("Could not open gem texture file");
+		}
+		if (!finishGemTexture.loadFromFile("FinishGem.png")) {
+			throw std::runtime_error("Could not open FinishGem.png texture file");
+		}
+
 		gem gem1(1, sf::Vector2f(1000,600));
+		gem1.gemSprite.setTexture(gemTexture);
+		gem1.gemSprite.setScale(0.75, 0.75);
 		levelGems.push_back(gem1);
 
+		gem finishGem(2, sf::Vector2f(3000, 500));
+		finishGem.gemSprite.setTexture(finishGemTexture);
+		levelGems.push_back(finishGem);
+
 		levelTimeHUD.setFont(initalFont);
-		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+300, playerInLevel->playerRect.getPosition().y-300));
+		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+400, playerInLevel->playerRect.getPosition().y-300));
 		levelTimeHUD.setCharacterSize(30);
 		levelTimeHUD.setStyle(sf::Text::Regular);
 		levelTimeHUD.setFillColor(sf::Color::White);
+
+		if (!initalGemHUDTexture.loadFromFile("gem.png")) {
+			throw std::runtime_error("Could not open gem texture file");
+		}
+		initalGemHUD.setTexture(initalGemHUDTexture);
+		initalGemHUD.setPosition(playerInLevel->playerRect.getPosition().x, playerInLevel->playerRect.getPosition().y - 300);
+		initalGemText.setFont(initalFont);
+		initalGemText.setString(std::to_string(playerInLevel->coinCount));
+		initalGemText.setPosition(sf::Vector2f(initalGemHUD.getPosition().x+40, initalGemHUD.getPosition().y+30));
+		initalGemText.setCharacterSize(30);
+		initalGemText.setStyle(sf::Text::Regular);
+		initalGemText.setFillColor(sf::Color::White);
+
 
 		if (int(levelTime.getElapsedTime().asSeconds()) % 60) {
 			//minute time
@@ -111,16 +149,15 @@ int level::spawn(player *playerInLevel) {
 }
 
 void level::update(player *mainPlayer) {
-	initalHeartText.setString(std::to_string(mainPlayer->lives));
-	heartSprite.setPosition(sf::Vector2f(1300, 50));
-	initalHeartText.setPosition(sf::Vector2f(1350, 115));
+	//heartSprite.setPosition(sf::Vector2f(1300, 50));
+	//initalHeartText.setPosition(sf::Vector2f(1350, 115));
 	if (int(levelTime.getElapsedTime().asSeconds()) >= 60) {
 		//minute time
 		int levelSecs = levelTime.getElapsedTime().asSeconds();
 		if (levelSecs%60==0) {
 			levelTimeHUDMinute = levelSecs / 60;
-		}
-		levelTimeHUD.setString(levelTimeHUDMinute + ":" + std::to_string(levelSecs));
+		}  
+    		levelTimeHUD.setString(levelTimeHUDMinute + ":" + std::to_string(levelSecs));
 	}
 	else {
 		if (int(levelTime.getElapsedTime().asSeconds() < 10)) {
@@ -130,9 +167,18 @@ void level::update(player *mainPlayer) {
 			levelTimeHUD.setString("00:" + std::to_string(int(levelTime.getElapsedTime().asSeconds())));
 		}
 	}
-	levelTimeHUD.setPosition(sf::Vector2f(mainPlayer->playerRect.getPosition().x + 300, mainPlayer->playerRect.getPosition().y - 300));
+	heartSprite.setPosition(sf::Vector2f(mainPlayer->playerRect.getPosition().x - 650, mainPlayer->playerRect.getPosition().y - 400));
+	initalHeartText.setPosition(sf::Vector2f(heartSprite.getPosition().x+45,heartSprite.getPosition().y+65));
+	initalHeartText.setString(std::to_string(mainPlayer->lives));
+	levelTimeHUD.setPosition(sf::Vector2f(mainPlayer->playerRect.getPosition().x + 500, mainPlayer->playerRect.getPosition().y - 350));
+	initalGemHUD.setPosition(mainPlayer->playerRect.getPosition().x-50, mainPlayer->playerRect.getPosition().y - 375);
+	initalGemHUD.setScale(sf::Vector2f(0.75, 0.75));
+	initalGemText.setString(std::to_string(mainPlayer->coinCount));
+	initalGemText.setPosition(sf::Vector2f(initalGemHUD.getPosition().x + 40, initalGemHUD.getPosition().y + 30));
 }
 
-void level::onComplete() {
-
+void level::onComplete(player *mainPlayer) {
+	mainPlayer->movingControlProtected = false;
+	mainPlayer->movingLeftPermitted = false;
+	mainPlayer->movingRightPermitted = false;
 }

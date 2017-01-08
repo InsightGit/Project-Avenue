@@ -41,13 +41,13 @@ int enemy::attacked(int livesToDeduct) {
 	return 0;
 }
 
-void enemy::update(bool collided) {
+void enemy::update(bool collided, sf::Vector2f collisionPoint) {
 	/* if (currentPlayer->playerRect.getPosition().x - enemyCircle.getPosition().x <= sightRadius) {
 		if (!currentPlayer->playerRect.getPosition().x - enemyCircle.getPosition().x > -15) {
 			attack(currentPlayer);
 		}
 	} */
-	if (collided) {
+	if (collided && collisionPoint.x!=pastCollison.x && !limitDirectionChanges) {
 		if (moving == 'l') {
 			moving = 'r';
 		}
@@ -55,5 +55,5 @@ void enemy::update(bool collided) {
 			moving = 'l';
 		}
 	}
-
+	pastCollison = collisionPoint;
 }

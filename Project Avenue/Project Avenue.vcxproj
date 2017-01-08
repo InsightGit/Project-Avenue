@@ -25,14 +25,17 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="QuestionBlock.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="Gem.hpp" />
+    <ClInclude Include="JumpPad.hpp" />
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="MainMenu.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="QuestionBlock.hpp" />
     <ClInclude Include="SpecialLand.hpp" />
     <ClInclude Include="Weapon.hpp" />
     <ClInclude Include="Zipline.hpp" />

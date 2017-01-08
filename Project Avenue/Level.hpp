@@ -23,6 +23,11 @@ class level {
 	int levelTimeHUDMinute = 1;
 	sf::Texture heart;
 	sf::Sprite heartSprite;
+	sf::Texture initalGemHUDTexture;
+	sf::Texture gemTexture;
+	sf::Texture finishGemTexture;
+	sf::Sprite initalGemHUD;
+	sf::Text initalGemText;
 	sf::View levelView = sf::View(sf::FloatRect(0, 76800,1366,768));
 	sf::Clock levelTime;
 	int subscene = 0;
@@ -40,6 +45,6 @@ class level {
 	int spawn(player *playerPosition);
 	void update(player *mainPlayer);
 	void updateView(player mainPlayer, sf::Vector2i worldCoords);
-	void onComplete();
+	void onComplete(player *mainPlayer);
 };
 #endif

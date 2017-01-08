@@ -15,6 +15,9 @@ public:
 	int jumpState = 0;
 	int jumpDistance = 150;
 	int coinCount = 0;
+	bool movingRightPermitted = true;
+	bool movingLeftPermitted = true;
+	bool movingControlProtected = true;
 	sf::Vector2f positionBeforeJump;
 	level *currentLevel;
 

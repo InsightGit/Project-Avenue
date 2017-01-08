@@ -32,8 +32,8 @@ int main()
 	int pastPosFrameCount = 0;
 	bool deletedMainMenu = false;
 	bool jumping = false;
-	bool movingRightPermitted = true;
-	bool movingLeftPermitted = true;
+	//bool movingRightPermitted = true;
+	//bool movingLeftPermitted = true;
 	bool firstTimeSpawn = true;
 	sf::Clock clock;
 	sf::Vector2f pastPos;
@@ -72,12 +72,12 @@ int main()
 
 		if (sceneNum == 1 && level1.subscene == 1) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				if (movingLeftPermitted) {
+				if (player1.movingLeftPermitted) {
 					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
 				}
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				if (movingRightPermitted) {
+				if (player1.movingRightPermitted) {
 					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
 				}
 			}
@@ -139,6 +139,7 @@ int main()
 				if (firstTimeSpawn) {
 					level1.levelTime = sf::Clock();
 					firstTimeSpawn = false;
+					std::clock_t timerStart = std::clock();
 				}
 				//using views
 				window.clear(sf::Color::Color(20, 146, 210, 1));
@@ -153,37 +154,47 @@ int main()
 
 				window.setView(level1.levelView);
 
+				window.draw(level1.initalGemHUD);
 				window.draw(level1.levelTimeHUD);
+				window.draw(level1.heartSprite);
+
+				window.draw(level1.initalGemText);
+				window.draw(level1.initalHeartText);
 
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 3) {
+					if (i == 5) {
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
 						if (i == 0) {
 							if (player1.playerRect.getPosition().y - 20 >= level1.landRectShapes[i].getPosition().y - 100) {
 								playerIntersectCount++;
-								movingRightPermitted = true;
-								movingLeftPermitted = true;
+								player1.movingRightPermitted = true;
+								player1.movingLeftPermitted = true;
 							}
 						}
+
 						else {
-							movingRightPermitted = true;
-							movingLeftPermitted = true;
- 							if (player1.playerRect.getPosition().x-20 <= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
+							player1.movingRightPermitted = true;
+							player1.movingLeftPermitted = true;
+							if (player1.playerRect.getPosition().x - 20 <= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
 								//if (!player1.playerRect.getPosition().y > level1.landRectShapes[i].getGlobalBounds().height+1) {
-									movingRightPermitted = false;
+								player1.movingRightPermitted = false;
 								//}
 							}
-							if (player1.playerRect.getPosition().x-20 >= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
-								movingLeftPermitted = false;
+							if (player1.playerRect.getPosition().x - 20 >= level1.landRectShapes[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
+								player1.movingLeftPermitted = false;
 							}
-							if (player1.playerRect.getPosition().y-20 >= level1.landRectShapes[i].getPosition().y - 100) {
+							if (player1.playerRect.getPosition().y - 20 >= level1.landRectShapes[i].getPosition().y - 100) {
 								playerIntersectCount++;
 							}
 						}
 					}
+				}
+				if (!player1.movingLeftPermitted && !player1.movingRightPermitted && player1.movingControlProtected) {
+					player1.movingRightPermitted = true;
+					player1.movingLeftPermitted = true;
 				}
 				if (player1.playerRect.getPosition().y > 850) {
 					player1.lives--;
@@ -194,14 +205,19 @@ int main()
 
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
-						level1.levelGems[i].onCollect(&player1,&coinCollectBuffer);
+ 						if (level1.levelGems[i].id == 2) {
+							level1.levelGems[i].onCollect(&player1);
+						}
+						else {
+							level1.levelGems[i].onCollect(&player1, &coinCollectBuffer);
+						}
 					}
 				}
 
 
 				if (playerIntersectCount == 0 && !jumping) {
-						player1.playerRect.move(sf::Vector2f(0,player1.jumpSpeed));
-				} 
+					player1.playerRect.move(sf::Vector2f(0, player1.jumpSpeed));
+				}
 
 				player1.levelIntersectCount = playerIntersectCount;
 
@@ -222,17 +238,54 @@ int main()
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
+					sf::Vector2f futurePos;
+					sf::CircleShape futureCircle = level1.levelEnemies[i].enemyCircle;
+					if (level1.levelEnemies[i].moving == 'l') {
+						futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x - level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
+					}
+					else if (level1.levelEnemies[i].moving == 'r') {
+						futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x + level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
+					}
+
+					futureCircle.setPosition(futurePos);
+
 					std::cout << timerDuration << "\n";
+					if (i == 1) {
+						break;
+					}
 					for (int c = 0; level1.landRectShapesSize > c; c++) {
-						if (i == 3) {
-							break;
-						}
-						if (level1.levelEnemies[i].enemyCircle.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
-							level1.levelEnemies[i].update(true);
+
+						/*if (level1.levelEnemies[i].enemyCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+							level1.levelEnemies[i].update(true, futureCircle.getPosition());
 						}
 						else {
-							level1.levelEnemies[i].update(false);
+							level1.levelEnemies[i].update(false, futureCircle.getPosition());
+						}*/
+						if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+							level1.levelEnemies[i].update(true, futureCircle.getPosition());
+							if (level1.levelEnemies[i].moving == 'l') {
+								level1.levelEnemies[i].moving = 'r';
+							}
+							else if (level1.levelEnemies[i].moving == 'r') {
+								level1.levelEnemies[i].moving == 'l';
+							}
+							level1.levelEnemies[i].limitDirectionChanges = true;
 						}
+						else {
+							level1.levelEnemies[i].update(false, futureCircle.getPosition());
+							level1.levelEnemies[i].limitDirectionChanges = true;
+						}
+					}
+					futureCircle.move(0, 20);
+
+					int enemyintersect = 0;
+					for (int c = 0; level1.landRectShapesSize > c; c++) {
+						if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+							enemyintersect++;
+						}
+					}
+					if (enemyintersect == 0) {
+						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(0, level1.levelEnemies[i].enemySpeed));
 					}
 					
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
@@ -242,13 +295,13 @@ int main()
 						lostLifesound.play();
 					}
 
-					if (level1.levelEnemies[i].moving == 'l' && timerDuration>=1) {
+					if (level1.levelEnemies[i].moving == 'l'  && timerDuration>=0.45) {
 						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed / -1, 0));
-						timerDuration = 0;
+						timerStart = std::clock();
 					}
-					else if (level1.levelEnemies[i].moving == 'r' && timerDuration >= 1) {
+					else if (level1.levelEnemies[i].moving == 'r'  && timerDuration >= 0.45) {
 						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed, 0));
-						timerDuration = 0;
+						timerStart = std::clock();
 					}
 					window.draw(level1.levelEnemies[i].enemyCircle);
 				}
@@ -260,6 +313,9 @@ int main()
 				std::cout << "WeaponPosition: (" << weapon1.weaponRect.getPosition().x << "," << weapon1.weaponRect.getPosition().y << ")\n";
 				#endif
 				window.display();
+				for (int i = 0; level1.levelEnemies.size() > i; i++) {
+					level1.levelEnemies[i].limitDirectionChanges = false;
+				}
 			}
 		}
 		else {
