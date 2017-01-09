@@ -6,7 +6,7 @@
 class player;
 class gem {
 public:
-	int id;
+	int gemId;
 	int gemValue = 0;
 	sf::Sound coinCollectSound;
 	sf::Texture gemTexture;

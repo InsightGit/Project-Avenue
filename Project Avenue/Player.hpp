@@ -18,6 +18,7 @@ public:
 	bool movingRightPermitted = true;
 	bool movingLeftPermitted = true;
 	bool movingControlProtected = true;
+	bool jumpByJumpPad = true;
 	sf::Vector2f positionBeforeJump;
 	level *currentLevel;
 

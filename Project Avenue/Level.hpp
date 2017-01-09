@@ -16,6 +16,7 @@ class level {
 	std::string levelId;
 	bool drawBackground = false;
 	bool levelSpawned = false;
+	bool levelFinished = false;
 	sf::Font initalFont;
 	sf::Text initalText;
 	sf::Text initalHeartText;

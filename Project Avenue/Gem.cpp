@@ -4,6 +4,7 @@
 #include "Level.hpp"
 
 gem::gem(int id, sf::Vector2f position) {
+	gemId = id;
 	if (id == 1) {
 		gemValue = 1;
 		if (!gemTexture.loadFromFile("gem.png")) {
@@ -42,7 +43,7 @@ gem::gem(int id, const std::string *customTextureLocation, sf::Vector2f position
 
 void gem::onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay) {
 	if (!protectGem) {
-		if (id == 2 && gemValue == -1) {
+		if (gemId == 2 && gemValue == -1) {
 			playerToAddTo->currentLevel->onComplete(playerToAddTo);
 		}
 		else {
@@ -56,8 +57,8 @@ void gem::onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay) {
 }
 
 void gem::onCollect(player *playerToAddTo) {
-	if (!protectGem) {
-		if (id == 2 && gemValue == -1) {
+	if   (!protectGem) {
+	   	if (gemId == 2 && gemValue == -1) {
 			playerToAddTo->currentLevel->onComplete(playerToAddTo);
 		}
 		else {

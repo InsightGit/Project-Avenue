@@ -69,25 +69,26 @@ int main()
 
 		pastPos = player1.playerRect.getPosition();
 
-
 		if (sceneNum == 1 && level1.subscene == 1) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				if (player1.movingLeftPermitted) {
-					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
+			if (!level1.levelFinished) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+					if (player1.movingLeftPermitted) {
+						player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
+					}
 				}
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				if (player1.movingRightPermitted) {
-					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+					if (player1.movingRightPermitted) {
+						player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
+					}
 				}
-			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-				if (!jumping) {
-					player1.positionBeforeJump = player1.playerRect.getPosition();
-					player1.jumpState = 0;
-					timer = 1.0f;
- 					player1.jump(&timer,&playerIntersectCount);
- 					jumping = true;
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+					if (!jumping) {
+						player1.positionBeforeJump = player1.playerRect.getPosition();
+						player1.jumpState = 0;
+						timer = 1.0f;
+						player1.jump(&timer, &playerIntersectCount);
+						jumping = true;
+					}
 				}
 			}
 		}
@@ -112,7 +113,7 @@ int main()
 		}
 		window.clear(sf::Color::Color(20,146,210,1));
 
-		std::cout << sceneNum << "\n";
+		//std::cout << sceneNum << "\n";
 		if (sceneNum == 0) {
 			//window.draw(backgroundSprite);
 			window.draw(mainM->titleText);
@@ -205,7 +206,10 @@ int main()
 
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
- 						if (level1.levelGems[i].id == 2) {
+						if (level1.levelGems[i].gemId != -858993460) {
+							std::cout << "id=" << std::to_string(level1.levelGems[i].gemId);
+						}
+ 						if (level1.levelGems[i].gemId == 2) {
 							level1.levelGems[i].onCollect(&player1);
 						}
 						else {
@@ -249,7 +253,7 @@ int main()
 
 					futureCircle.setPosition(futurePos);
 
-					std::cout << timerDuration << "\n";
+					//std::cout << timerDuration << "\n";
 					if (i == 1) {
 						break;
 					}

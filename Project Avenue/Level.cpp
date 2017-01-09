@@ -1,5 +1,6 @@
 #include "Level.hpp"
 #include "Gem.hpp"
+#include "JumpPad.hpp"
 #include <stdexcept>
 
 level::level(const std::string worldFileLocation,sf::Font defaultFont, player *player1) {
@@ -66,6 +67,7 @@ void level::updateView(player mainPlayer,sf::Vector2i worldCoords) {
 }
 
 int level::spawn(player *playerInLevel) {
+	levelFinished = false;
 	if (levelId == "1-1") {
 		sf::RectangleShape landRect1 = sf::RectangleShape(sf::Vector2f(4000, 600));
 		landRect1.setPosition(sf::Vector2f(-600, 700));
@@ -115,6 +117,9 @@ int level::spawn(player *playerInLevel) {
 		gem finishGem(2, sf::Vector2f(3000, 500));
 		finishGem.gemSprite.setTexture(finishGemTexture);
 		levelGems.push_back(finishGem);
+
+		jumpPad jumpPad1(1, sf::Vector2f(1100,600));
+		//jumpPad1.specialSprite.setTexture()
 
 		levelTimeHUD.setFont(initalFont);
 		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+400, playerInLevel->playerRect.getPosition().y-300));
@@ -178,6 +183,7 @@ void level::update(player *mainPlayer) {
 }
 
 void level::onComplete(player *mainPlayer) {
+	levelFinished = true;
 	mainPlayer->movingControlProtected = false;
 	mainPlayer->movingLeftPermitted = false;
 	mainPlayer->movingRightPermitted = false;
