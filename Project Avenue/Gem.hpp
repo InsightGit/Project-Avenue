@@ -15,6 +15,7 @@ public:
 	bool isContained = false;
 
 	gem();
+	gem(int id);
 	gem(int id, sf::Vector2f position);
 	gem(int id, const std::string *customTextureLocation, sf::Vector2f position);
 

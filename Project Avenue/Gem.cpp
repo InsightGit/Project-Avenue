@@ -3,6 +3,24 @@
 #include "Player.hpp"
 #include "Level.hpp"
 
+gem::gem(int id) {
+	gemId = id;
+	if (id == 1) {
+		gemValue = 1;
+		if (!gemTexture.loadFromFile("gem.png")) {
+			throw std::runtime_error("Could not open gem texture for id 1 (gem.png)");
+		}
+		gemSprite.setTexture(gemTexture);
+	}
+	else if (id == 2) {
+		gemValue = -1;
+		if (!gemTexture.loadFromFile("FinishGem.png")) {
+			throw std::runtime_error("Could not open gem texture for id 2 (FinishGem.png)");
+		}
+		gemSprite.setTexture(gemTexture);
+	}
+}
+
 gem::gem(int id, sf::Vector2f position) {
 	gemId = id;
 	if (id == 1) {

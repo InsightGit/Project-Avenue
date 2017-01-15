@@ -2,6 +2,7 @@
 #include "MainMenu.hpp"
 #include "Player.hpp"
 #include "Weapon.hpp"
+#include "ImagineTypes.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -92,6 +93,14 @@ int main()
 				}
 			}
 		}
+		if (sceneNum == 0) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+				mainM->move(imagine::types::Up);
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+				mainM->move(imagine::types::Down);
+			}
+		}
 
 		if (player1.jumpState == 2) {
 			jumping = false;
@@ -116,8 +125,13 @@ int main()
 		//std::cout << sceneNum << "\n";
 		if (sceneNum == 0) {
 			//window.draw(backgroundSprite);
+			window.setView(mainM->mainMenuView);
+			mainM->mainMenuView.setCenter(sf::Vector2f(684,384));
 			window.draw(mainM->titleText);
 			window.draw(mainM->startGame);
+			window.draw(mainM->activeCircle);
+			window.draw(mainM->multiplayer);
+			mainM->update();
 			if (weapon1.owner == NULL) {
 				player1.possessWeapon(&weapon1);
 			}
@@ -154,13 +168,6 @@ int main()
 				//swindow.draw(level1.initalHeartText);
 
 				window.setView(level1.levelView);
-
-				window.draw(level1.initalGemHUD);
-				window.draw(level1.levelTimeHUD);
-				window.draw(level1.heartSprite);
-
-				window.draw(level1.initalGemText);
-				window.draw(level1.initalHeartText);
 
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
@@ -311,11 +318,33 @@ int main()
 				}
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					window.draw(level1.levelGems[i].gemSprite);
+				}				
+				for (int i = 0; level1.levelQuestionBlock.size() > i; i++) {
+					if (player1.playerRect.getGlobalBounds().intersects(level1.levelQuestionBlock[i].specialSprite.getGlobalBounds())) {
+ 						level1.levelQuestionBlock[i].onPlayerHit();
+					}
+					window.draw(level1.levelQuestionBlock[i].specialSprite);
 				}
+				for (int i = 0; level1.levelJumpPads.size() > i; i++) {
+					if (level1.levelJumpPads[i].specialSprite.getGlobalBounds().intersects(player1.playerRect.getGlobalBounds())) {
+						level1.levelJumpPads[i].onCollison(&player1);
+					}
+					window.draw(level1.levelJumpPads[i].specialSprite);
+				}
+
 				#ifdef _DEBUG
 				std::cout << "PlayerPosition: (" << player1.playerRect.getPosition().x << "," << player1.playerRect.getPosition().y << ") Jumping:" << jumping << " PlayerIntersectCount:" << playerIntersectCount << "Position Before Jumping: (" << player1.positionBeforeJump.x << "," << player1.positionBeforeJump.y << ") Time:" << std::to_string(timer) << "\n";
 				std::cout << "WeaponPosition: (" << weapon1.weaponRect.getPosition().x << "," << weapon1.weaponRect.getPosition().y << ")\n";
 				#endif
+				//Display HUD
+				window.draw(level1.initalGemHUD);
+				window.draw(level1.levelTimeHUD);
+				window.draw(level1.heartSprite);
+
+				window.draw(level1.initalGemText);
+				window.draw(level1.initalHeartText);
+
+
 				window.display();
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					level1.levelEnemies[i].limitDirectionChanges = false;

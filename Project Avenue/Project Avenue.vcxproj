@@ -21,6 +21,7 @@
   <ItemGroup>
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Gem.cpp" />
+    <ClCompile Include="ImagineNetwork.cpp" />
     <ClCompile Include="JumpPad.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
@@ -32,6 +33,8 @@
   <ItemGroup>
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="Gem.hpp" />
+    <ClInclude Include="ImagineNetwork.hpp" />
+    <ClInclude Include="ImagineTypes.hpp" />
     <ClInclude Include="JumpPad.hpp" />
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="MainMenu.hpp" />

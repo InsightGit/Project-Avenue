@@ -1,6 +1,7 @@
 #include "Level.hpp"
 #include "Gem.hpp"
 #include "JumpPad.hpp"
+#include "QuestionBlock.hpp"
 #include <stdexcept>
 
 level::level(const std::string worldFileLocation,sf::Font defaultFont, player *player1) {
@@ -86,20 +87,34 @@ int level::spawn(player *playerInLevel) {
 		landRect3.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect3);
+
 		
 		sf::RectangleShape landRect4 = sf::RectangleShape(sf::Vector2f(300,100));
 		landRect4.setPosition(sf::Vector2f(1200,600));
 		landRect4.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect4);
+		
 
-		sf::RectangleShape landRect5 = sf::RectangleShape(sf::Vector2f(100, 50));
+		sf::RectangleShape landRect5 = sf::RectangleShape(sf::Vector2f(300, 50));
 		landRect5.setPosition(sf::Vector2f(3500, 700));
 		landRect5.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect5);
 
-		enemy enemy1(1, sf::Vector2f(1500, 600));
+		/*sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(400, 100));
+		landRect6.setPosition(sf::Vector2f(1500, 300));
+		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect6);
+
+		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(200, 100));
+		landRect7.setPosition(sf::Vector2f(1200, 400));
+		landRect7.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect7);*/
+
+		enemy enemy1(1, sf::Vector2f(1000, 300));
 		levelEnemies.push_back(enemy1);
 
 		if (!gemTexture.loadFromFile("gem.png")) {
@@ -107,6 +122,12 @@ int level::spawn(player *playerInLevel) {
 		}
 		if (!finishGemTexture.loadFromFile("FinishGem.png")) {
 			throw std::runtime_error("Could not open FinishGem.png texture file");
+		}
+		if (!jumpPadTexture.loadFromFile("jumpPad.png")) {
+			throw std::runtime_error("Could not open jumpPad.png texture file");
+		}
+		if (!questionBlockTexture.loadFromFile("QuestionBlock.png")) {
+			throw std::runtime_error("Could not open QuestionBlock.png texture file");
 		}
 
 		gem gem1(1, sf::Vector2f(1000,600));
@@ -118,8 +139,17 @@ int level::spawn(player *playerInLevel) {
 		finishGem.gemSprite.setTexture(finishGemTexture);
 		levelGems.push_back(finishGem);
 
-		jumpPad jumpPad1(1, sf::Vector2f(1100,600));
-		//jumpPad1.specialSprite.setTexture()
+		gem gemForQB1(1,sf::Vector2f(-1000,-1000));
+		gemForQB1.gemSprite.setTexture(gemTexture);
+		gemForQB1.gemSprite.setPosition(sf::Vector2f(1300, 299));
+
+		jumpPad jumpPad1(1, sf::Vector2f(1000,605));
+		jumpPad1.specialSprite.setTexture(jumpPadTexture);
+		levelJumpPads.push_back(jumpPad1);
+
+		questionBlock questionBlock1(&gemForQB1,sf::Vector2f(1300,299));
+		questionBlock1.specialSprite.setTexture(questionBlockTexture);
+		levelQuestionBlock.push_back(questionBlock1);
 
 		levelTimeHUD.setFont(initalFont);
 		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+400, playerInLevel->playerRect.getPosition().y-300));

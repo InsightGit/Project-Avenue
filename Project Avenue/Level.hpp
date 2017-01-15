@@ -8,6 +8,8 @@
 #include "Player.hpp"
 #include "Enemy.hpp"
 #include "Gem.hpp"
+#include "JumpPad.hpp"
+#include "QuestionBlock.hpp"
 
 //class gem;
 class level {
@@ -27,6 +29,8 @@ class level {
 	sf::Texture initalGemHUDTexture;
 	sf::Texture gemTexture;
 	sf::Texture finishGemTexture;
+	sf::Texture jumpPadTexture;
+	sf::Texture questionBlockTexture;
 	sf::Sprite initalGemHUD;
 	sf::Text initalGemText;
 	sf::View levelView = sf::View(sf::FloatRect(0, 76800,1366,768));
@@ -40,6 +44,8 @@ class level {
 	int landRectShapesSize = -1;
 	std::vector<enemy> levelEnemies;
 	std::vector<gem> levelGems;
+	std::vector<jumpPad> levelJumpPads;
+	std::vector<questionBlock> levelQuestionBlock;
 
 	level(const std::string worldFileLocation,sf::Font defaultFont, player *player1);
 
