@@ -35,6 +35,7 @@
     <ClInclude Include="Gem.hpp" />
     <ClInclude Include="ImagineNetwork.hpp" />
     <ClInclude Include="ImagineTypes.hpp" />
+    <ClInclude Include="ImagineWaitRoom.hpp" />
     <ClInclude Include="JumpPad.hpp" />
     <ClInclude Include="Level.hpp" />
     <ClInclude Include="MainMenu.hpp" />

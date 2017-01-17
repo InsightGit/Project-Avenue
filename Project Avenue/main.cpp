@@ -100,6 +100,16 @@ int main()
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 				mainM->move(imagine::types::Down);
 			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+				if (mainM->activePosition == 1) {
+					sceneNum = 1;
+				}
+				else if (mainM->activePosition == 2) {
+					sceneNum = 2;
+				}
+				//delete[] mainM;
+				//deletedMainMenu = true;
+			}
 		}
 
 		if (player1.jumpState == 2) {
@@ -110,11 +120,7 @@ int main()
 			player1.jump(&timer, &playerIntersectCount);
 		}
 		
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-			sceneNum = 1;
-			//delete[] mainM;
-			//deletedMainMenu = true;
-		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9)) {
 			level1.subscene = 1;
 			//delete[] mainM;
@@ -350,6 +356,9 @@ int main()
 					level1.levelEnemies[i].limitDirectionChanges = false;
 				}
 			}
+		}
+		else if (sceneNum==2) {
+
 		}
 		else {
 			std::cout << sceneNum << "\n";

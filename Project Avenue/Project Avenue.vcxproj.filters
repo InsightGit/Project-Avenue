@@ -83,5 +83,8 @@
     <ClInclude Include="ImagineTypes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ImagineWaitRoom.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
