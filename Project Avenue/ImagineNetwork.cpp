@@ -1,33 +1,46 @@
 #include "ImagineNetwork.hpp"
+#include "ImagineWaitRoom.hpp"
 #include <stdexcept>
 #include <thread>
 #include <iostream>
-void imagineNetwork::connectingThread(const char *IpAddress, const int port) {
-	if (connectionSocket.connect(IpAddress, port) != sf::Socket::Status::Done) {
-		*error = 1;
+/*std::thread imagineNetwork::callConnectingThread() {
+	return std::thread([&](imagineNetwork imagine()) {imagine->connectingThread();});
+}*/
+
+void imagineNetwork::connectingThread() {
+	connecting = true;
+	std::cout << "Connecting...\n";
+	sf::Socket::Status connectionStatus = connectionSocket.connect("192.168.1.99", 59000);
+	if (connectionStatus != sf::Socket::Done) {
+		error = 1;
+		std::cout << "Could not connect to Online Services!\n";
 	}
-	else {
+	else if (connectionStatus==sf::Socket::Done){
 		sf::Packet recievedPacket;
-		connectionSocket.receive(recievedPacket);
+		if (connectionSocket.receive(recievedPacket) != sf::Socket::Done) {
+			error = 3;
+			std::cout << "Could not recieve data from Online Services!\n";
+		}
 		std::string message;
 		std::string secondMessage;
-		while (!*ready) {
+		while (!ready) {
+			std::cout << "DEBUG: 1:" << message << "\n";
 			if (recievedPacket >> message) {
 				if (message == "Connected") {
-					*connected = true;
+					connected = true;
 					sf::Packet sendingPacket;
 					sendingPacket << std::string("moreinfo");
 					connectionSocket.send(sendingPacket);
 				}
 			}
 			else if (recievedPacket >> message >> secondMessage) {
-				displayText.setFont(defaultFont);
-				displayText.setString(message);
-				*waitRoomToLoad = secondMessage;
-				*error = 0;
+				*waitRoomId = secondMessage;
+				std::cout << "DEBUG: 1:" << message << " 2:" << secondMessage << "\n";
+				waitRoom = imagine::waitRoom(message,defaultFont,secondMessage);
+				error = 0; //this is not a error
 			}
 			else {
-				*error = 2;
+				error = 2;
 			}
 		}
 	}
@@ -41,7 +54,7 @@ imagineNetwork::imagineNetwork(sf::Font fontToUse, const char *IpAddress, const 
 }
 
 void imagineNetwork::whenReady(){
-	if (*error == 0) {
+	if (error == 0) {
 		sf::Packet packetToSend;
 		packetToSend << std::string("ready");
 		connectionSocket.send(packetToSend);

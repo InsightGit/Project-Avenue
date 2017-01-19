@@ -1,27 +1,33 @@
 #pragma once
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
+#include "ImagineWaitRoom.hpp"
+#include <thread>
 
-class imagineNetwork {
+static class imagineNetwork {
 public:
 	sf::TcpSocket connectionSocket;
 	sf::Socket::Status socketStatus;
-	bool *connected = new bool(false);
-	bool *ready = new bool(false);
-	int *error = new int(-1);
-	bool *recievedInfo = new bool(false);
-	std::string *waitRoomToLoad = new std::string;
+	bool connected = false;
+	bool ready = false;
+	int error = -1;
+	bool recievedInfo = false;
+	bool connecting = false;
+	std::string *waitRoomId = new std::string;
+	imagine::waitRoom waitRoom;
 
-	sf::Text displayText;
 	sf::Font defaultFont;
 
 	imagineNetwork(sf::Font fontToUse,const char *IpAddress = "192.168.1.99", const int port = 59000);
+	imagineNetwork();
 
-	virtual ~imagineNetwork();
-	
-	void connectingThread(const char *IpAddress, const int port);
+	//virtual ~imagineNetwork();
+
+	std::thread callConnectingThread();
 	bool isConnectionComplete();
 	void whenReady();
+//protected:
+	void connectingThread();
 	//givePosition
 
 };

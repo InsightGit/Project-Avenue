@@ -3,12 +3,18 @@
 #include "Player.hpp"
 #include "Weapon.hpp"
 #include "ImagineTypes.hpp"
+#include "ImagineNetwork.hpp"
 #include <iostream>
 #include <thread>
 #include <chrono>
 #include <cstdio>
 #include <cmath>
+#include <stdexcept>
 typedef std::chrono::high_resolution_clock Clock;
+
+void threadPlaceholder() {
+	std::cout << "Initlized thread\n";
+}
 
 
 int main()
@@ -28,6 +34,7 @@ int main()
 	//sf::Sprite backgroundSprite;
 	player player1(sf::Vector2f(170,600));
 	weapon weapon1(1);
+	imagineNetwork *network = new imagineNetwork(defaultFont);
 	int sceneNum = 0;
 	int playerIntersectCount = 0;
 	int pastPosFrameCount = 0;
@@ -165,13 +172,8 @@ int main()
 				//using views
 				window.clear(sf::Color::Color(20, 146, 210, 1));
 				level1.update(&player1);
-				//window.draw(backgroundSprite);
 				level1.updateView(player1,window.mapCoordsToPixel(player1.playerRect.getPosition(),level1.levelView));
 				level1.levelView.setCenter(player1.playerRect.getPosition());
-				//level1.levelView.setCenter(level1.landRectShapes[0].getPosition());
-
-				//window.draw(level1.heartSprite);
-				//swindow.draw(level1.initalHeartText);
 
 				window.setView(level1.levelView);
 
@@ -350,7 +352,6 @@ int main()
 				window.draw(level1.initalGemText);
 				window.draw(level1.initalHeartText);
 
-
 				window.display();
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					level1.levelEnemies[i].limitDirectionChanges = false;
@@ -358,7 +359,42 @@ int main()
 			}
 		}
 		else if (sceneNum==2) {
+			std::thread *connecting = new std::thread(threadPlaceholder);
+			sf::Text connectingText;
+			if (!network->connected) {
+				if (!network->connecting) {
+					//connecting = new std::thread(&imagineNetwork::connectingThread,imagineNetwork());
+					//connecting = &network.callConnectingThread();
+					connecting = new std::thread(&imagineNetwork::connectingThread,network);
+				}
+				if (network->error > 0) {
+					sceneNum = 0;
+				}
+				connectingText.setFont(defaultFont);
+				connectingText.setString("Connecting to Online Services...");
+				connectingText.setPosition(sf::Vector2f(534, 344));
+				connectingText.setCharacterSize(40);
+				connectingText.setStyle(sf::Text::Regular);
+				connectingText.setFillColor(sf::Color::Black);
+				window.draw(connectingText);
+			}
+			else if (!network->ready && network->connected) {
+				connectingText.setString("Retriving info from Online Services...");
+				window.draw(connectingText);
+			}
+			else if (network->ready && network->connected) {
+				if (!network->waitRoom.spawned) {
+					network->waitRoom.spawn();
+				}
+				window.setView(network->waitRoom.waitRoomView);
+				network->waitRoom.updateView(&player1);
 
+				for (int i = 0; network->waitRoom.landRects.size() > i; i++) {
+					window.draw(network->waitRoom.landRects[i]);
+				}
+			}
+			
+			window.display();
 		}
 		else {
 			std::cout << sceneNum << "\n";
