@@ -1,0 +1,8 @@
+os:
+- linux
+dist: trusty
+sudo: required
+compiler: gcc
+before_install:
+- sudo apt install libboost-all-dev libsfml-dev g++
+script: g++ -std=c++11 -lsfml-network -lsfml-system -lpthread -o main
