@@ -40,6 +40,7 @@ int main()
 	int pastPosFrameCount = 0;
 	bool deletedMainMenu = false;
 	bool jumping = false;
+	bool firstReadyTime = true;
 	//bool movingRightPermitted = true;
 	//bool movingLeftPermitted = true;
 	bool firstTimeSpawn = true;
@@ -98,6 +99,30 @@ int main()
 						jumping = true;
 					}
 				}
+			}
+		}
+		else if (sceneNum == 2 && network->waitRoomReady && network->connected && !network->serverReady) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				if (player1.movingLeftPermitted) {
+					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+				if (player1.movingRightPermitted) {
+					player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x + player1.walkSpeed, player1.playerRect.getPosition().y));
+				}
+			}
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+				if (!jumping) {
+					player1.positionBeforeJump = player1.playerRect.getPosition();
+					player1.jumpState = 0;
+					timer = 1.0f;
+					player1.jump(&timer, &playerIntersectCount);
+					jumping = true;
+				}
+			}
+			if(sf::Keyboard::isKeyPressed(sf::Keyboard::R)){
+				network->whenReady();
 			}
 		}
 		if (sceneNum == 0) {
@@ -360,11 +385,13 @@ int main()
 		}
 		else if (sceneNum==2) {
 			std::thread *connecting = new std::thread(threadPlaceholder);
+			std::thread *checker = new std::thread(threadPlaceholder);
 			sf::Text connectingText;
 			if (!network->connected) {
 				if (!network->connecting) {
 					//connecting = new std::thread(&imagineNetwork::connectingThread,imagineNetwork());
 					//connecting = &network.callConnectingThread();
+					network->error = -1;
 					connecting = new std::thread(&imagineNetwork::connectingThread,network);
 				}
 				if (network->error > 0) {
@@ -378,17 +405,92 @@ int main()
 				connectingText.setFillColor(sf::Color::Black);
 				window.draw(connectingText);
 			}
-			else if (!network->ready && network->connected) {
+			else if (!network->waitRoomReady && network->connected) {
 				connectingText.setString("Retriving info from Online Services...");
 				window.draw(connectingText);
 			}
-			else if (network->ready && network->connected) {
+			else if (network->waitRoomReady && network->connected && !network->serverReady) {
 				if (!network->waitRoom.spawned) {
-					network->waitRoom.spawn();
+					network->waitRoom.spawn(&player1);
+					checker = new std::thread(&imagineNetwork::updateServerStatus,network);
 				}
+				playerIntersectCount = 0;
+				for (int i = 0; network->waitRoom.landRects.size() > i; i++) {
+					if (i == 5) {
+						break;
+					}
+
+					if (player1.playerRect.getGlobalBounds().intersects(network->waitRoom.landRects[i].getGlobalBounds())) {
+						if (i == 0) {
+							if (player1.playerRect.getPosition().y - 20 >= network->waitRoom.landRects[i].getPosition().y - 100) {
+								playerIntersectCount++;
+								player1.movingRightPermitted = true;
+								player1.movingLeftPermitted = true;
+							}
+						}
+
+						else {
+							player1.movingRightPermitted = true;
+							player1.movingLeftPermitted = true;
+							if (player1.playerRect.getPosition().x - 20 <= network->waitRoom.landRects[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
+								//if (!player1.playerRect.getPosition().y > level1.landRectShapes[i].getGlobalBounds().height+1) {
+								player1.movingRightPermitted = false;
+								//}
+							}
+							if (player1.playerRect.getPosition().x - 20 >= network->waitRoom.landRects[i].getPosition().x /* && !player1.playerRect.getGlobalBounds().height > level1.landRectShapes[i].getGlobalBounds().height */) {
+								player1.movingLeftPermitted = false;
+							}
+							if (player1.playerRect.getPosition().y - 20 >= network->waitRoom.landRects[i].getPosition().y - 100) {
+								playerIntersectCount++;
+							}
+						}
+					}
+				}
+				if (!player1.movingLeftPermitted && !player1.movingRightPermitted && player1.movingControlProtected) {
+					player1.movingRightPermitted = true;
+					player1.movingLeftPermitted = true;
+				}
+				if (player1.playerRect.getPosition().y > 850) {
+					player1.lives--;
+					lostLifesound.setBuffer(lostLifeBuffer);
+					player1.playerRect.setPosition(sf::Vector2f(170, 600));
+					lostLifesound.play();
+				}
+
+				/*for (int i = 0; level1.levelGems.size() > i; i++) {
+					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
+						if (level1.levelGems[i].gemId != -858993460) {
+							std::cout << "id=" << std::to_string(level1.levelGems[i].gemId);
+						}
+						if (level1.levelGems[i].gemId == 2) {
+							level1.levelGems[i].onCollect(&player1);
+						}
+						else {
+							level1.levelGems[i].onCollect(&player1, &coinCollectBuffer);
+						}
+					}
+				}*/
+
+
+				if (playerIntersectCount == 0 && !jumping) {
+					player1.playerRect.move(sf::Vector2f(0, player1.jumpSpeed));
+				}
+
+				player1.levelIntersectCount = playerIntersectCount;
+
+
+				if (player1.playerRect.getPosition().x < 170) {
+					player1.playerRect.setPosition(170, player1.playerRect.getPosition().y); //prevents players from seeing edge
+				}
+				if (player1.playerRect.getPosition().y < 0) {
+					player1.playerRect.setPosition(player1.playerRect.getPosition().x, 170);
+				}
+
 				window.setView(network->waitRoom.waitRoomView);
 				network->waitRoom.updateView(&player1);
 
+				window.draw(network->waitRoom.readyLight);
+				window.draw(player1.playerRect);
 				for (int i = 0; network->waitRoom.landRects.size() > i; i++) {
 					window.draw(network->waitRoom.landRects[i]);
 				}

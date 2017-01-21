@@ -13,6 +13,9 @@ public:
 	int error = -1;
 	bool recievedInfo = false;
 	bool connecting = false;
+	bool waitRoomReady = false;
+	bool serverReady = false;
+	bool connection = false;
 	std::string *waitRoomId = new std::string;
 	imagine::waitRoom waitRoom;
 
@@ -23,7 +26,7 @@ public:
 
 	//virtual ~imagineNetwork();
 
-	std::thread callConnectingThread();
+	void updateServerStatus();
 	bool isConnectionComplete();
 	void whenReady();
 //protected:
