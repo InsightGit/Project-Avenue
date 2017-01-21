@@ -1,0 +1,10 @@
+os:
+- linux
+dist: trusty
+sudo: required
+compiler: gcc
+before_install:
+- sudo apt install libboost-all-dev libsfml-dev g++
+script:
+- cd "Project Avenue"
+- g++ *.cpp *.hpp -std=c++11 -lsfml-network -lsfml-system -lsfml-graphics -lsfml-audio -lsfml-window -o main
