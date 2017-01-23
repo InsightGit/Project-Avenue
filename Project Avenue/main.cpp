@@ -4,6 +4,7 @@
 #include "Weapon.hpp"
 #include "ImagineTypes.hpp"
 #include "ImagineNetwork.hpp"
+#include "Icon.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -20,6 +21,7 @@ void threadPlaceholder() {
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(136600, 76800), "Project Avenue",sf::Style::Fullscreen);
+	window.setIcon(icon.width, icon.height, icon.pixel_data);
 	sf::Font defaultFont;
 	sf::Sound lostLifesound;
 	sf::SoundBuffer coinCollectBuffer;
@@ -34,7 +36,8 @@ int main()
 	//sf::Sprite backgroundSprite;
 	player player1(sf::Vector2f(170,600));
 	weapon weapon1(1);
-	imagineNetwork *network = new imagineNetwork(defaultFont);
+	imagineNetwork *network = new imagineNetwork(defaultFont,&player1);
+	std::thread *gettingInfo = new std::thread(threadPlaceholder);
 	int sceneNum = 0;
 	int playerIntersectCount = 0;
 	int pastPosFrameCount = 0;
@@ -52,6 +55,7 @@ int main()
 		return 1;
 	}
 	level level1("level1.txt",defaultFont,&player1);
+	imagine::arena arena1;
 	player1.currentLevel = &level1;
 
 	//if (!background.loadFromFile("background.png")) {
@@ -414,6 +418,9 @@ int main()
 					network->waitRoom.spawn(&player1);
 					checker = new std::thread(&imagineNetwork::updateServerStatus,network);
 				}
+				if (network->serverReady) {
+					sceneNum = 3;
+				}
 				playerIntersectCount = 0;
 				for (int i = 0; network->waitRoom.landRects.size() > i; i++) {
 					if (i == 5) {
@@ -496,6 +503,41 @@ int main()
 				}
 			}
 			
+			window.display();
+		}
+		else if (sceneNum == 3) {
+			std::thread *arenaLoading = new std::thread(threadPlaceholder);
+			if (!network->arenaLoading) {
+				arenaLoading = new std::thread(&imagineNetwork::arenaLoadingThread, network);
+			}
+			if (network->arenaLoaded) {
+				network->arena = imagine::arena(*network->arenaId,&network->player2);
+				if (!network->arena.spawned) {
+					network->arena.spawn(&player1);
+				}
+				if (!network->gettingInfo) {
+					gettingInfo = new std::thread(&imagineNetwork::playerInfoThread,network);
+				}
+				if (network->arena.spawned) {
+					sceneNum = 4;
+				}
+			}
+
+			sf::Text loadingText;
+			loadingText.setFont(defaultFont);
+			loadingText.setString("Loading Arena...");
+			loadingText.setPosition(sf::Vector2f(534, 344));
+			loadingText.setCharacterSize(40);
+			loadingText.setStyle(sf::Text::Regular);
+			loadingText.setFillColor(sf::Color::Black);
+			window.draw(loadingText);
+			window.display();
+		}
+		else if (sceneNum == 4) {
+			network->arena.updateView(&player1);
+			for (int i = 0; network->arena.landRects.size() > i; i++) {
+				window.draw(network->arena.landRects[i]);
+			}
 			window.display();
 		}
 		else {

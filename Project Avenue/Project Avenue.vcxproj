@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Gem.cpp" />
+    <ClCompile Include="Icon.h" />
+    <ClCompile Include="ImagineArena.cpp" />
     <ClCompile Include="ImagineNetwork.cpp" />
     <ClCompile Include="ImagineWaitRoom.cpp" />
     <ClCompile Include="JumpPad.cpp" />
@@ -34,6 +36,7 @@
   <ItemGroup>
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="Gem.hpp" />
+    <ClInclude Include="ImagineArena.hpp" />
     <ClInclude Include="ImagineNetwork.hpp" />
     <ClInclude Include="ImagineTypes.hpp" />
     <ClInclude Include="ImagineWaitRoom.hpp" />
@@ -153,7 +156,7 @@
       <AdditionalIncludeDirectories>E:\SFML-2.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>Console</SubSystem>
+      <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -2,9 +2,10 @@
 #include <SFML/Network.hpp>
 #include <SFML/Graphics.hpp>
 #include "ImagineWaitRoom.hpp"
+#include "ImagineArena.hpp"
 #include <thread>
 
-static class imagineNetwork {
+class imagineNetwork {
 public:
 	sf::TcpSocket connectionSocket;
 	sf::Socket::Status socketStatus;
@@ -16,12 +17,20 @@ public:
 	bool waitRoomReady = false;
 	bool serverReady = false;
 	bool connection = false;
+	bool arenaLoading = false;
+	bool arenaLoaded = false;
+	bool gettingInfo = false;
+	bool gameOn = false;
+	player *player1;
+	player player2;
 	std::string *waitRoomId = new std::string;
+	std::string *arenaId = new std::string;
 	imagine::waitRoom waitRoom;
+	imagine::arena arena;
 
 	sf::Font defaultFont;
 
-	imagineNetwork(sf::Font fontToUse,const char *IpAddress = "192.168.1.99", const int port = 59000);
+	imagineNetwork(sf::Font fontToUse, player *mainPlayer, const char *IpAddress = "192.168.1.99", const int port = 59000);
 	imagineNetwork();
 
 	//virtual ~imagineNetwork();
@@ -31,6 +40,8 @@ public:
 	void whenReady();
 //protected:
 	void connectingThread();
+	void arenaLoadingThread();
+	void playerInfoThread();
 	//givePosition
 
 };
