@@ -8,10 +8,11 @@ class mainMenu{
 	sf::Text titleText;
 	sf::Text startGame;
 	sf::Text multiplayer;
+	sf::Text quitGame;
 	sf::View mainMenuView = sf::View(sf::FloatRect(0, 76800, 1366, 768));
 	sf::CircleShape activeCircle = sf::CircleShape(30);
 	int activePosition = 1;
-	int optionSize = 2;
+	int optionSize = 3;
 
 	mainMenu(sf::Font defaultFont);
 

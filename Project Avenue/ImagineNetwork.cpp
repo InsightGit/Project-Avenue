@@ -13,7 +13,7 @@ void imagineNetwork::connectingThread() {
 	sf::Socket::Status connectionStatus;
 	std::cout << "Connecting...\n";
 	if (!connection) {
-		 connectionStatus = connectionSocket.connect("192.168.1.99", 59000);
+		 connectionStatus = connectionSocket.connect("avenue.infernostudios.me", 59000);
 		if (connectionStatus != sf::Socket::Done) {
 			error = 1;
 			connectionSocket.disconnect();
@@ -48,7 +48,7 @@ void imagineNetwork::connectingThread() {
 				else if (message == "Full") {
 					if (!connection) {
 						connectionSocket.disconnect();
-						sf::Socket::Status connectionStatus = connectionSocket.connect("192.168.1.99", 59001);
+						sf::Socket::Status connectionStatus = connectionSocket.connect("avenue.infernostudios.me", 59001);
 						if (connectionStatus != sf::Socket::Done) {
 							error = 4;
 							connectionSocket.disconnect();

@@ -102,6 +102,20 @@ int level::spawn(player *playerInLevel) {
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect5);
 
+		sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(200, 40));
+		landRect6.setPosition(sf::Vector2f(3800, 600));
+		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect6);
+
+
+		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(100, 30));
+		landRect6.setPosition(sf::Vector2f(4000, 500));
+		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect7);
+
+
 		/*sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(400, 100));
 		landRect6.setPosition(sf::Vector2f(1500, 300));
 		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
@@ -135,10 +149,10 @@ int level::spawn(player *playerInLevel) {
 		gem1.gemSprite.setScale(0.75, 0.75);
 		levelGems.push_back(gem1);
 
-		gem finishGem(2, sf::Vector2f(3000, 500));
+		/*gem finishGem(2, sf::Vector2f(3000, 500));
 		finishGem.gemSprite.setTexture(finishGemTexture);
 		levelGems.push_back(finishGem);
-
+		*/
 		gem gemForQB1(1,sf::Vector2f(-1000,-1000));
 		gemForQB1.gemSprite.setTexture(gemTexture);
 		gemForQB1.gemSprite.setPosition(sf::Vector2f(1300, 299));
@@ -170,9 +184,9 @@ int level::spawn(player *playerInLevel) {
 		initalGemText.setFillColor(sf::Color::White);
 
 
-		if (int(levelTime.getElapsedTime().asSeconds()) % 60) {
+		if (int(levelTime.getElapsedTime().asSeconds())/60 >= 1) {
 			//minute time
-			levelTimeHUD.setString(int(levelTime.getElapsedTime().asSeconds())/60 + ":" + std::to_string(levelTime.getElapsedTime().asSeconds()));
+			levelTimeHUD.setString(int(levelTime.getElapsedTime().asSeconds()/60) + ":" + std::to_string(levelTime.getElapsedTime().asSeconds()));
 		}
 		else {
 			levelTimeHUD.setString("00:" + std::to_string(levelTime.getElapsedTime().asSeconds()));

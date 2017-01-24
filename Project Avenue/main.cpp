@@ -10,6 +10,7 @@
 #include <chrono>
 #include <cstdio>
 #include <cmath>
+#include <ctime>
 #include <stdexcept>
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -43,11 +44,14 @@ int main()
 	int pastPosFrameCount = 0;
 	bool deletedMainMenu = false;
 	bool jumping = false;
+	bool loading = false;
 	bool firstReadyTime = true;
 	//bool movingRightPermitted = true;
 	//bool movingLeftPermitted = true;
 	bool firstTimeSpawn = true;
 	sf::Clock clock;
+	sf::Clock mainMenuTimerClock;
+	sf::Clock levelScreenTimerClock;
 	sf::Vector2f pastPos;
 	float timer = 0;
 
@@ -131,10 +135,20 @@ int main()
 		}
 		if (sceneNum == 0) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) || sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-				mainM->move(imagine::types::Up);
+				sf::Time currentTimerTime = mainMenuTimerClock.getElapsedTime();
+				std::cout << currentTimerTime.asSeconds() << "\n";
+				if (currentTimerTime.asSeconds() >= 0.1) {
+					mainM->move(imagine::types::Up);
+					mainMenuTimerClock.restart();
+				}
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) || sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-				mainM->move(imagine::types::Down);
+				sf::Time currentTimerTime = mainMenuTimerClock.getElapsedTime();
+				std::cout << currentTimerTime.asSeconds() << "\n";
+				if (currentTimerTime.asSeconds() >= 0.1) {
+					mainM->move(imagine::types::Down);
+					mainMenuTimerClock.restart();
+				}
 			}
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
 				if (mainM->activePosition == 1) {
@@ -142,6 +156,9 @@ int main()
 				}
 				else if (mainM->activePosition == 2) {
 					sceneNum = 2;
+				}
+				else if (mainM->activePosition == 3) {
+					return 0;
 				}
 				//delete[] mainM;
 				//deletedMainMenu = true;
@@ -157,11 +174,11 @@ int main()
 		}
 		
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9)) {
+		/*if (sf::Keyboard::isKeyPressed(sf::Keyboard::Numpad9)) {
 			level1.subscene = 1;
 			//delete[] mainM;
 			//deletedMainMenu = true;
-		}
+		}*/
 		window.clear(sf::Color::Color(20,146,210,1));
 
 		//std::cout << sceneNum << "\n";
@@ -173,6 +190,7 @@ int main()
 			window.draw(mainM->startGame);
 			window.draw(mainM->activeCircle);
 			window.draw(mainM->multiplayer);
+			window.draw(mainM->quitGame);
 			mainM->update();
 			if (weapon1.owner == NULL) {
 				player1.possessWeapon(&weapon1);
@@ -191,6 +209,14 @@ int main()
 						return 4;
 					}
 				}
+				if (!loading) {
+					levelScreenTimerClock.restart();
+					loading = true;
+				}
+				sf::Time timePassed = levelScreenTimerClock.getElapsedTime();
+				if (timePassed.asSeconds() >= 3) {
+					level1.subscene = 1;
+				}
 			}
 			else if (level1.subscene==1){
 				if (firstTimeSpawn) {
@@ -208,7 +234,7 @@ int main()
 
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 5) {
+					if (i == 7) {
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
@@ -535,6 +561,9 @@ int main()
 		}
 		else if (sceneNum == 4) {
 			network->arena.updateView(&player1);
+			window.draw(player1.playerRect);
+			window.draw(network->player2.playerRect);
+
 			for (int i = 0; network->arena.landRects.size() > i; i++) {
 				window.draw(network->arena.landRects[i]);
 			}

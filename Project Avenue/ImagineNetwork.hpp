@@ -30,7 +30,7 @@ public:
 
 	sf::Font defaultFont;
 
-	imagineNetwork(sf::Font fontToUse, player *mainPlayer, const char *IpAddress = "192.168.1.99", const int port = 59000);
+	imagineNetwork(sf::Font fontToUse, player *mainPlayer, const char *IpAddress = "avenue.infernostudios.me", const int port = 59000);
 	imagineNetwork();
 
 	//virtual ~imagineNetwork();

@@ -19,6 +19,13 @@ mainMenu::mainMenu(sf::Font defaultFont) {
 	titleText.setStyle(sf::Text::Regular);
 	titleText.setFillColor(sf::Color::Black);
 
+	quitGame.setFont(font);
+	quitGame.setString("Quit Game");
+	quitGame.setPosition(sf::Vector2f(startGame.getPosition().x, startGame.getPosition().y + 200));
+	quitGame.setCharacterSize(30);
+	quitGame.setStyle(sf::Text::Regular);
+	quitGame.setFillColor(sf::Color::Red);
+
 	titleText.setCharacterSize(50);
 	startGame.setCharacterSize(30);
 	titleText.setStyle(sf::Text::Regular);
@@ -48,17 +55,19 @@ void mainMenu::update() {
 	else if (activeCircle.getFillColor().b > 255 && activeCircle.getFillColor().r > 255) {
 		activeCircle.setFillColor(sf::Color::Color(activeCircle.getFillColor().r, activeCircle.getFillColor().g, 0));
 	}*/
-	activeCircle.setPosition(sf::Vector2f(activeCircle.getPosition().x,225 + activePosition * 100));
+	//activeCircle.setPosition(sf::Vector2f(activeCircle.getPosition().x,225 + activePosition * 100));
 }
 
 void mainMenu::move(imagine::types::menuDirection direction) {
 	if (direction == imagine::types::Up) {
-		if (!activePosition <= 1) {
+		if (activePosition != 1) {
+			activeCircle.move(sf::Vector2f(0, -100));
 			activePosition--;
 		}
 	}
 	else if (direction == imagine::types::Down) {
 		if (activePosition < optionSize) {
+			activeCircle.move(sf::Vector2f(0, 100));
 			activePosition++;
 		}
 	}
