@@ -3,6 +3,10 @@
 #include "Player.hpp"
 #include "Level.hpp"
 
+gem::gem() {
+	collected = false;
+}
+
 gem::gem(int id) {
 	gemId = id;
 	if (id == 1) {
@@ -19,6 +23,7 @@ gem::gem(int id) {
 		}
 		gemSprite.setTexture(gemTexture);
 	}
+	collected = false;
 }
 
 gem::gem(int id, sf::Vector2f position) {
@@ -39,6 +44,7 @@ gem::gem(int id, sf::Vector2f position) {
 		gemSprite.setTexture(gemTexture);
 		gemSprite.setPosition(position);
 	}
+	collected = false;
 }
 
 gem::gem(int id, const std::string *customTextureLocation, sf::Vector2f position) {
@@ -57,6 +63,7 @@ gem::gem(int id, const std::string *customTextureLocation, sf::Vector2f position
 		gemSprite.setTexture(gemTexture);
 		gemSprite.setPosition(position);
 	}
+	collected = false;
 }
 
 void gem::onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay) {
@@ -71,11 +78,12 @@ void gem::onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay) {
 	coinCollectSound.setBuffer(*soundBufferToPlay);
 	gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
 	protectGem = true;
+	collected = true;
 	coinCollectSound.play();
 }
 
 void gem::onCollect(player *playerToAddTo) {
-	if   (!protectGem) {
+	if(!protectGem) {
 	   	if (gemId == 2 && gemValue == -1) {
 			playerToAddTo->currentLevel->onComplete(playerToAddTo);
 		}
@@ -85,4 +93,11 @@ void gem::onCollect(player *playerToAddTo) {
 	}
 	gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
 	protectGem = true;
+	collected = true;
+}
+
+void gem::update() {
+	if (protectGem) {
+		gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
+	}
 }

@@ -13,6 +13,7 @@ public:
 	sf::Sprite gemSprite;
 	bool protectGem = false;
 	bool isContained = false;
+	bool collected = false;
 
 	gem();
 	gem(int id);
@@ -21,4 +22,5 @@ public:
 
 	void onCollect(player *playerToAddTo, sf::SoundBuffer *soundBufferToPlay);
 	void onCollect(player *playerToAddTo);
+	void update();
 };

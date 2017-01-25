@@ -19,6 +19,7 @@ class level {
 	bool drawBackground = false;
 	bool levelSpawned = false;
 	bool levelFinished = false;
+	bool paused = false;
 	sf::Font initalFont;
 	sf::Text initalText;
 	sf::Text initalHeartText;

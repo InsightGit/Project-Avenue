@@ -2,8 +2,8 @@
 #include "MainMenu.hpp"
 #include "Player.hpp"
 #include "Weapon.hpp"
-#include "ImagineTypes.hpp"
 #include "ImagineNetwork.hpp"
+#include "ImagineSubMenu.hpp"
 #include "Icon.h"
 #include <iostream>
 #include <thread>
@@ -52,7 +52,10 @@ int main()
 	sf::Clock clock;
 	sf::Clock mainMenuTimerClock;
 	sf::Clock levelScreenTimerClock;
+	sf::Clock gemAddLimitClock;
 	sf::Vector2f pastPos;
+	imagine::subMenu *pauseSubMenu;
+	bool subMenuDeleted = true;
 	float timer = 0;
 
 	if (!defaultFont.loadFromFile("default.ttf")) {
@@ -107,6 +110,14 @@ int main()
 						jumping = true;
 					}
 				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+					level1.paused = true;
+					if (subMenuDeleted) {
+						pauseSubMenu = new imagine::subMenu(defaultFont,&level1.levelView);
+						subMenuDeleted = false;
+					}
+				}
+				
 			}
 		}
 		else if (sceneNum == 2 && network->waitRoomReady && network->connected && !network->serverReady) {
@@ -232,9 +243,19 @@ int main()
 
 				window.setView(level1.levelView);
 
+				if (level1.paused && !subMenuDeleted) {
+					window.draw(pauseSubMenu->activeCircle);
+					window.draw(pauseSubMenu->continueText);
+					window.draw(pauseSubMenu->returnText);
+					window.draw(pauseSubMenu->miniScreen);
+					player1.movingControlProtected = false;
+					player1.movingLeftPermitted = false;
+					player1.movingRightPermitted = false;
+				}
+
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 7) {
+					if (i == 9) {
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
@@ -276,14 +297,15 @@ int main()
 
 				for (int i = 0; level1.levelGems.size() > i; i++) {
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
-						if (level1.levelGems[i].gemId != -858993460) {
+						/*if (level1.levelGems[i].gemId != -858993460) {
 							std::cout << "id=" << std::to_string(level1.levelGems[i].gemId);
+						}*/
+ 						if (level1.levelGems[i].gemId == 2 && gemAddLimitClock.getElapsedTime().asSeconds() >= 0.1) {
+							gemAddLimitClock.restart();
 						}
- 						if (level1.levelGems[i].gemId == 2) {
-							level1.levelGems[i].onCollect(&player1);
-						}
-						else {
+						else if(level1.levelGems[i].gemId == 1 && gemAddLimitClock.getElapsedTime().asSeconds() >= 0.1) {
 							level1.levelGems[i].onCollect(&player1, &coinCollectBuffer);
+							gemAddLimitClock.restart();
 						}
 					}
 				}
@@ -311,75 +333,103 @@ int main()
 					window.draw(level1.landRectShapes[i]);
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
-					double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
-					sf::Vector2f futurePos;
-					sf::CircleShape futureCircle = level1.levelEnemies[i].enemyCircle;
-					if (level1.levelEnemies[i].moving == 'l') {
-						futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x - level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
-					}
-					else if (level1.levelEnemies[i].moving == 'r') {
-						futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x + level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
-					}
-
-					futureCircle.setPosition(futurePos);
-
-					//std::cout << timerDuration << "\n";
-					if (i == 1) {
-						break;
-					}
-					for (int c = 0; level1.landRectShapesSize > c; c++) {
-
-						/*if (level1.levelEnemies[i].enemyCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
-							level1.levelEnemies[i].update(true, futureCircle.getPosition());
+					if (!level1.paused) {
+						double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
+						sf::Vector2f futurePos;
+						sf::CircleShape futureCircle = level1.levelEnemies[i].enemyCircle;
+						if (level1.levelEnemies[i].moving == 'l') {
+							futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x - level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
 						}
-						else {
-							level1.levelEnemies[i].update(false, futureCircle.getPosition());
+						else if (level1.levelEnemies[i].moving == 'r') {
+							futurePos = sf::Vector2f(level1.levelEnemies[i].enemyCircle.getPosition().x + level1.levelEnemies[i].enemySpeed, level1.levelEnemies[i].enemyCircle.getPosition().y);
+						}
+
+						futureCircle.setPosition(futurePos);
+
+						/*for (int d = 0; level1.levelEnemies.size() > d; d++) {
+							if (d != i) {
+								if (futureCircle.getGlobalBounds().intersects(level1.levelEnemies[d].enemyCircle.getGlobalBounds())) {
+									level1.levelEnemies[i].update(true, futureCircle.getPosition());
+									if (level1.levelEnemies[i].moving == 'l') {
+										level1.levelEnemies[i].moving = 'r';
+									}
+									else if (level1.levelEnemies[i].moving == 'r') {
+										level1.levelEnemies[i].moving == 'l';
+									}
+									level1.levelEnemies[i].limitDirectionChanges = true;
+								}
+								else {
+									level1.levelEnemies[i].update(false, futureCircle.getPosition());
+									level1.levelEnemies[i].limitDirectionChanges = true;
+								}
+							}
 						}*/
-						if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+
+						//std::cout << timerDuration << "\n";
+						if (i == 3) {																																																//!
+							break;
+						}
+						for (int c = 0; level1.landRectShapesSize > c; c++) {
+
+							/*if (level1.levelEnemies[i].enemyCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
 							level1.levelEnemies[i].update(true, futureCircle.getPosition());
-							if (level1.levelEnemies[i].moving == 'l') {
-								level1.levelEnemies[i].moving = 'r';
 							}
-							else if (level1.levelEnemies[i].moving == 'r') {
-								level1.levelEnemies[i].moving == 'l';
-							}
-							level1.levelEnemies[i].limitDirectionChanges = true;
-						}
-						else {
+							else {
 							level1.levelEnemies[i].update(false, futureCircle.getPosition());
-							level1.levelEnemies[i].limitDirectionChanges = true;
+							}*/
+							if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+								level1.levelEnemies[i].update(true, futureCircle.getPosition());
+								if (level1.levelEnemies[i].moving == 'l') {
+									level1.levelEnemies[i].moving = 'r';
+								}
+								else if (level1.levelEnemies[i].moving == 'r') {
+									level1.levelEnemies[i].moving == 'l';
+								}
+								level1.levelEnemies[i].limitDirectionChanges = true;
+							}
+							else {
+								level1.levelEnemies[i].update(false, futureCircle.getPosition());
+								level1.levelEnemies[i].limitDirectionChanges = true;
+							}
 						}
-					}
-					futureCircle.move(0, 20);
+						futureCircle.move(0, 20);
 
-					int enemyintersect = 0;
-					for (int c = 0; level1.landRectShapesSize > c; c++) {
-						if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
-							enemyintersect++;
+						int enemyintersect = 0;
+						for (int c = 0; level1.landRectShapesSize > c; c++) {
+							if (futureCircle.getGlobalBounds().intersects(level1.landRectShapes[c].getGlobalBounds())) {
+								enemyintersect++;
+							}
 						}
-					}
-					if (enemyintersect == 0) {
-						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(0, level1.levelEnemies[i].enemySpeed));
-					}
-					
-					if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
-						player1.lives--;
-						lostLifesound.setBuffer(lostLifeBuffer);
-						player1.playerRect.setPosition(sf::Vector2f(170, 600));
-						lostLifesound.play();
-					}
+						/*for (int c = 0; level1.levelEnemies.size() > c; c++) {
+							if (futureCircle.getGlobalBounds().intersects(level1.levelEnemies[c].enemyCircle.getGlobalBounds())) {
+								enemyintersect++;
+							}
+						}*/
+						if (enemyintersect == 0) {
+							level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(0, level1.levelEnemies[i].enemySpeed));
+						}
 
-					if (level1.levelEnemies[i].moving == 'l'  && timerDuration>=0.45) {
-						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed / -1, 0));
-						timerStart = std::clock();
-					}
-					else if (level1.levelEnemies[i].moving == 'r'  && timerDuration >= 0.45) {
-						level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed, 0));
-						timerStart = std::clock();
+						if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
+							player1.lives--;
+							lostLifesound.setBuffer(lostLifeBuffer);
+							player1.playerRect.setPosition(sf::Vector2f(170, 600));
+							lostLifesound.play();
+						}
+
+						if (level1.levelEnemies[i].moving == 'l'  && timerDuration >= 0.45) {
+							level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed / -1, 0));
+							timerStart = std::clock();
+						}
+						else if (level1.levelEnemies[i].moving == 'r'  && timerDuration >= 0.45) {
+							level1.levelEnemies[i].enemyCircle.move(sf::Vector2f(level1.levelEnemies[i].enemySpeed, 0));
+							timerStart = std::clock();
+						}
+						
 					}
 					window.draw(level1.levelEnemies[i].enemyCircle);
 				}
 				for (int i = 0; level1.levelGems.size() > i; i++) {
+					level1.levelGems[i].update();
 					window.draw(level1.levelGems[i].gemSprite);
 				}				
 				for (int i = 0; level1.levelQuestionBlock.size() > i; i++) {
@@ -528,7 +578,6 @@ int main()
 					window.draw(network->waitRoom.landRects[i]);
 				}
 			}
-			
 			window.display();
 		}
 		else if (sceneNum == 3) {

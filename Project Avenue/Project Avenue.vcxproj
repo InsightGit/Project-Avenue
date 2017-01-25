@@ -24,6 +24,7 @@
     <ClCompile Include="Icon.h" />
     <ClCompile Include="ImagineArena.cpp" />
     <ClCompile Include="ImagineNetwork.cpp" />
+    <ClCompile Include="ImagineSubMenu.cpp" />
     <ClCompile Include="ImagineWaitRoom.cpp" />
     <ClCompile Include="JumpPad.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -38,6 +39,7 @@
     <ClInclude Include="Gem.hpp" />
     <ClInclude Include="ImagineArena.hpp" />
     <ClInclude Include="ImagineNetwork.hpp" />
+    <ClInclude Include="ImagineSubMenu.hpp" />
     <ClInclude Include="ImagineTypes.hpp" />
     <ClInclude Include="ImagineWaitRoom.hpp" />
     <ClInclude Include="JumpPad.hpp" />
@@ -119,7 +121,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <AdditionalIncludeDirectories>E:\SFML-2.4.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>

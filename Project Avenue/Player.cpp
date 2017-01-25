@@ -6,7 +6,8 @@
 
 player::player(sf::Vector2f position) {
 	//position = playerPosition;
-	walkSpeed = 10;
+	walkSpeed = 15;
+	jumpDistance = 200;
 	playerRect.setPosition(position);
 	playerRect.setFillColor(sf::Color::Black);
 }

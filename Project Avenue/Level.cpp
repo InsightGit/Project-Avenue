@@ -77,20 +77,20 @@ int level::spawn(player *playerInLevel) {
 		landRectShapesSize++;
 
 		sf::RectangleShape landRect2 = sf::RectangleShape(sf::Vector2f(100, 99));
-		landRect2.setPosition(sf::Vector2f(400, 601));
+		landRect2.setPosition(sf::Vector2f(600, 601));
 		landRect2.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect2);
 
-		sf::RectangleShape landRect3 = sf::RectangleShape(sf::Vector2f(100, 199));
-		landRect3.setPosition(sf::Vector2f(600, 501));
+		sf::RectangleShape landRect3 = sf::RectangleShape(sf::Vector2f(100, 99));
+		landRect3.setPosition(sf::Vector2f(1000, 601));
 		landRect3.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect3);
 
-		
+
 		sf::RectangleShape landRect4 = sf::RectangleShape(sf::Vector2f(300,100));
-		landRect4.setPosition(sf::Vector2f(1200,600));
+		landRect4.setPosition(sf::Vector2f(1500,600));
 		landRect4.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect4);
@@ -103,17 +103,34 @@ int level::spawn(player *playerInLevel) {
 		landRectShapes.push_back(landRect5);
 
 		sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(200, 40));
-		landRect6.setPosition(sf::Vector2f(3800, 600));
+		landRect6.setPosition(sf::Vector2f(3950, 600));
 		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect6);
 
 
-		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(100, 30));
-		landRect6.setPosition(sf::Vector2f(4000, 500));
-		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(150, 30));
+		landRect7.setPosition(sf::Vector2f(4400, 500));
+		landRect7.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect7);
+		
+		sf::RectangleShape landRect8 = sf::RectangleShape(sf::Vector2f(200, 70));
+		landRect8.setPosition(sf::Vector2f(2000, 450));
+		landRect8.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect8);
+
+		sf::RectangleShape landRect9 = sf::RectangleShape(sf::Vector2f(100, 50));
+		landRect9.setPosition(sf::Vector2f(2400, 250));
+		landRect9.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect9);
+
+		jumpPad jumpPad1(1, sf::Vector2f(landRect7.getPosition().x+50, landRect7.getPosition().y-90));
+		jumpPad1.specialSprite.setTexture(jumpPadTexture);
+		levelJumpPads.push_back(jumpPad1);
+
 
 
 		/*sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(400, 100));
@@ -128,8 +145,12 @@ int level::spawn(player *playerInLevel) {
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect7);*/
 
-		enemy enemy1(1, sf::Vector2f(1000, 300));
+		enemy enemy1(1, sf::Vector2f(2000, 300));
 		levelEnemies.push_back(enemy1);
+		enemy enemy2(1, sf::Vector2f(2500, 300));
+		levelEnemies.push_back(enemy2);
+		enemy enemy3(1, sf::Vector2f(3000, 300));
+		levelEnemies.push_back(enemy3);
 
 		if (!gemTexture.loadFromFile("gem.png")) {
 			throw std::runtime_error("Could not open gem texture file");
@@ -153,17 +174,13 @@ int level::spawn(player *playerInLevel) {
 		finishGem.gemSprite.setTexture(finishGemTexture);
 		levelGems.push_back(finishGem);
 		*/
-		gem gemForQB1(1,sf::Vector2f(-1000,-1000));
+		/*gem gemForQB1(1,sf::Vector2f(-1000,-1000));
 		gemForQB1.gemSprite.setTexture(gemTexture);
-		gemForQB1.gemSprite.setPosition(sf::Vector2f(1300, 299));
+		gemForQB1.gemSprite.setPosition(sf::Vector2f(1300, 299));*/
 
-		jumpPad jumpPad1(1, sf::Vector2f(1000,605));
-		jumpPad1.specialSprite.setTexture(jumpPadTexture);
-		levelJumpPads.push_back(jumpPad1);
-
-		questionBlock questionBlock1(&gemForQB1,sf::Vector2f(1300,299));
+		/*questionBlock questionBlock1(&gemForQB1,sf::Vector2f(1300,299));
 		questionBlock1.specialSprite.setTexture(questionBlockTexture);
-		levelQuestionBlock.push_back(questionBlock1);
+		levelQuestionBlock.push_back(questionBlock1);*/
 
 		levelTimeHUD.setFont(initalFont);
 		levelTimeHUD.setPosition(sf::Vector2f(playerInLevel->playerRect.getPosition().x+400, playerInLevel->playerRect.getPosition().y-300));
