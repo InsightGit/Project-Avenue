@@ -36,7 +36,7 @@ void player::attacked(int livesToDeduct) {
 }
 
 void player::jump(float *timer, int *playerIntersectCount) {
-	if (jumpByJumpPad) {
+	/*if (jumpByJumpPad) {
 		if (jumpState == 0) {
 			//playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, playerRect.getPosition().y-jumpSpeed));
 			if (positionBeforeJump.y - playerRect.getPosition().y >= jumpDistance) {
@@ -45,13 +45,29 @@ void player::jump(float *timer, int *playerIntersectCount) {
 			else {
 				playerRect.move(0, jumpSpeed / -1);
 			}
-		}
+		}*/
+		if (jumpByJumpPad) {
+			if (jumpState == 0) {
+				//playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, playerRect.getPosition().y-jumpSpeed));
+				playerRect.move(0, jumpSpeed / -1);
+				if (playerRect.getPosition().y > 0) {
+					if (positionBeforeJump.y - playerRect.getPosition().y >= jumpDistance) {
+						jumpState = 1;
+					}
+				}
+				else if (playerRect.getPosition().y < 0) {
+					if (positionBeforeJump.y + playerRect.getPosition().y >= jumpDistance - 20) {
+						jumpState = 1;
+					}
+				}
+			}
 		if (jumpState == 1 && *timer <= 0.f) {
 			//if (positionBeforeJump.y == playerRect.getPosition().y) {
 			if (*playerIntersectCount>0) {
 				jumpState = 2;
 			}
 			else {
+				//if (playerRect.getPosition().y-jumpSpeed < positionBeforeJump.y)
 				playerRect.move(0, jumpSpeed);
 			}
 		}

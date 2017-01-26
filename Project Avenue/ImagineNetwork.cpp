@@ -82,6 +82,7 @@ void imagineNetwork::updateServerStatus() {
 			if (recievedPacket >> message) {
 				if (message == "ready") {
 					serverReady == true;
+					std::cout << "SERVER IS READY!\n";
 				}
 			}
 		}

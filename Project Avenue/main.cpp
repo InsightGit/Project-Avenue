@@ -35,7 +35,7 @@ int main()
 	}
 	//sf::Texture background;
 	//sf::Sprite backgroundSprite;
-	player player1(sf::Vector2f(170,600));
+	player player1(sf::Vector2f(170,1700));
 	weapon weapon1(1);
 	imagineNetwork *network = new imagineNetwork(defaultFont,&player1);
 	std::thread *gettingInfo = new std::thread(threadPlaceholder);
@@ -412,7 +412,7 @@ int main()
 						if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
 							player1.lives--;
 							lostLifesound.setBuffer(lostLifeBuffer);
-							player1.playerRect.setPosition(sf::Vector2f(170, 600));
+							player1.playerRect.setPosition(sf::Vector2f(170, 1600));
 							lostLifesound.play();
 						}
 

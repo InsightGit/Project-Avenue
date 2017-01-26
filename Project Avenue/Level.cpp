@@ -71,61 +71,67 @@ int level::spawn(player *playerInLevel) {
 	levelFinished = false;
 	if (levelId == "1-1") {
 		sf::RectangleShape landRect1 = sf::RectangleShape(sf::Vector2f(4000, 600));
-		landRect1.setPosition(sf::Vector2f(-600, 700));
+		landRect1.setPosition(sf::Vector2f(-600, 1700));
 		landRect1.setFillColor(sf::Color::Green);
 		landRectShapes.push_back(landRect1);
 		landRectShapesSize++;
 
 		sf::RectangleShape landRect2 = sf::RectangleShape(sf::Vector2f(100, 99));
-		landRect2.setPosition(sf::Vector2f(600, 601));
+		landRect2.setPosition(sf::Vector2f(600, 1601));
 		landRect2.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect2);
 
 		sf::RectangleShape landRect3 = sf::RectangleShape(sf::Vector2f(100, 99));
-		landRect3.setPosition(sf::Vector2f(1000, 601));
+		landRect3.setPosition(sf::Vector2f(1000, 1601));
 		landRect3.setFillColor(sf::Color::Color(8, 253, 36, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect3);
 
 
 		sf::RectangleShape landRect4 = sf::RectangleShape(sf::Vector2f(300,100));
-		landRect4.setPosition(sf::Vector2f(1500,600));
+		landRect4.setPosition(sf::Vector2f(1500, 1600));
 		landRect4.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect4);
 		
 
 		sf::RectangleShape landRect5 = sf::RectangleShape(sf::Vector2f(300, 50));
-		landRect5.setPosition(sf::Vector2f(3500, 700));
+		landRect5.setPosition(sf::Vector2f(3500, 1700));
 		landRect5.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect5);
 
 		sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(200, 40));
-		landRect6.setPosition(sf::Vector2f(3950, 600));
+		landRect6.setPosition(sf::Vector2f(3950, 1600));
 		landRect6.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect6);
 
 
 		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(150, 30));
-		landRect7.setPosition(sf::Vector2f(4400, 500));
+		landRect7.setPosition(sf::Vector2f(4400, 1500));
 		landRect7.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect7);
 		
 		sf::RectangleShape landRect8 = sf::RectangleShape(sf::Vector2f(200, 70));
-		landRect8.setPosition(sf::Vector2f(2000, 450));
+		landRect8.setPosition(sf::Vector2f(2000, 1450));
 		landRect8.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect8);
 
 		sf::RectangleShape landRect9 = sf::RectangleShape(sf::Vector2f(100, 50));
-		landRect9.setPosition(sf::Vector2f(2400, 250));
+		landRect9.setPosition(sf::Vector2f(2400, 1265));
 		landRect9.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect9);
+
+		sf::RectangleShape landRect10 = sf::RectangleShape(sf::Vector2f(500, 350));
+		landRect10.setPosition(sf::Vector2f(4700, 1290));
+		landRect10.setFillColor(sf::Color::Color(219, 220, 219, 100));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect10);
 
 		jumpPad jumpPad1(1, sf::Vector2f(landRect7.getPosition().x+50, landRect7.getPosition().y-90));
 		jumpPad1.specialSprite.setTexture(jumpPadTexture);
@@ -145,11 +151,11 @@ int level::spawn(player *playerInLevel) {
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect7);*/
 
-		enemy enemy1(1, sf::Vector2f(2000, 300));
+		enemy enemy1(1, sf::Vector2f(2000, 1300));
 		levelEnemies.push_back(enemy1);
-		enemy enemy2(1, sf::Vector2f(2500, 300));
+		enemy enemy2(1, sf::Vector2f(2500, 1300));
 		levelEnemies.push_back(enemy2);
-		enemy enemy3(1, sf::Vector2f(3000, 300));
+		enemy enemy3(1, sf::Vector2f(3000, 1300));
 		levelEnemies.push_back(enemy3);
 
 		if (!gemTexture.loadFromFile("gem.png")) {
@@ -165,7 +171,7 @@ int level::spawn(player *playerInLevel) {
 			throw std::runtime_error("Could not open QuestionBlock.png texture file");
 		}
 
-		gem gem1(1, sf::Vector2f(1000,600));
+		gem gem1(1, sf::Vector2f(1000,1600));
 		gem1.gemSprite.setTexture(gemTexture);
 		gem1.gemSprite.setScale(0.75, 0.75);
 		levelGems.push_back(gem1);

@@ -5,6 +5,7 @@
 class level;
 class enemy;
 class weapon;
+class jumpPad;
 class player {
 public:
 	int lives = 3;
@@ -20,6 +21,7 @@ public:
 	bool movingControlProtected = true;
 	bool jumpByJumpPad = true;
 	sf::Vector2f positionBeforeJump;
+	jumpPad *currentJumpPad;
 	level *currentLevel;
 
 	//sf::Vector2f playerPosition;
