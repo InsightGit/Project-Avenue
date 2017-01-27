@@ -7,20 +7,33 @@ enemy::enemy(int id, sf::Vector2f position) {
 		case 1:
 			attackStrength=1;
 			lives = 1;
-			sightRadius = 15;
+			sightRadius = 500;
 			speed = 10;
 			enemySize = 50;
 			enemySpeed = 100;
 			enemyCircle = sf::CircleShape(enemySize);
 			enemyCircle.setFillColor(sf::Color::Red);
+			enemyCircle.setPosition(enemyPosition);
+			circleInit = true;
 		//default:
 			//throw std::runtime_error("Unknown enemy id");
+		case 2:
+			attackStrength = 1;
+			enemySize = 50;
+			sf::Texture texture;
+			if (!texture.loadFromFile("Spikes.png")) {
+				throw std::runtime_error("Could not load Spikes.png");
+			}
+			enemySprite.setTexture(texture);
+			enemySprite.setPosition(enemyPosition);
 	}
-	enemyCircle.setPosition(enemyPosition);
 }
 enemy::enemy(){}
 
 void enemy::attack(player *playerToAttack) {
+	if (id == 2) {
+		return;
+	}
 	sf::Vector2f distance(enemyPosition.x- playerToAttack->playerRect.getPosition().x, 0);
 	if (!enemyPosition.x - playerToAttack->playerRect.getPosition().x <= enemySize+10) {
 		if (enemyPosition.x - playerToAttack->playerRect.getPosition().x > 0) {
@@ -34,6 +47,9 @@ void enemy::attack(player *playerToAttack) {
 }
 
 int enemy::attacked(int livesToDeduct) {
+	if (id == 2) {
+		return 0;
+	}
 	lives -= livesToDeduct;
 	if (lives <= 0) {
 		enemyCircle.setPosition(sf::Vector2f(-1000000000, -1000000000));
@@ -47,6 +63,9 @@ void enemy::update(bool collided, sf::Vector2f collisionPoint) {
 			attack(currentPlayer);
 		}
 	} */
+	if (id == 2) {
+		return;
+	}
 	if (collided && collisionPoint.x!=pastCollison.x && !limitDirectionChanges) {
 		if (moving == 'l') {
 			moving = 'r';

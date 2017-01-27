@@ -19,11 +19,14 @@ public:
 	int enemySpeed;
 	char moving = 'l';
 	bool limitDirectionChanges = false;
+	bool circleInit = false;
 
 	sf::Vector2f pastCollison;
 	weapon *weaponPossesed;
 	sf::Vector2f enemyPosition;
 	sf::CircleShape enemyCircle;
+	sf::Sprite enemySprite;
+	sf::Texture enemyTexture;
 
 	enemy(int id,sf::Vector2f position);
 	enemy();

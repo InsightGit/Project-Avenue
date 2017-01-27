@@ -35,7 +35,7 @@ int main()
 	}
 	//sf::Texture background;
 	//sf::Sprite backgroundSprite;
-	player player1(sf::Vector2f(170,1700));
+	player player1(sf::Vector2f(170,1500));
 	weapon weapon1(1);
 	imagineNetwork *network = new imagineNetwork(defaultFont,&player1);
 	std::thread *gettingInfo = new std::thread(threadPlaceholder);
@@ -255,7 +255,7 @@ int main()
 
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 9) {
+					if (i == 26){
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
@@ -288,10 +288,10 @@ int main()
 					player1.movingRightPermitted = true;
 					player1.movingLeftPermitted = true;
 				}
-				if (player1.playerRect.getPosition().y > 850) {
+				if (player1.playerRect.getPosition().y > 1850) {
 					player1.lives--;
 					lostLifesound.setBuffer(lostLifeBuffer);
-					player1.playerRect.setPosition(sf::Vector2f(170, 600));
+					player1.playerRect.setPosition(sf::Vector2f(170, 1500));
 					lostLifesound.play();
 				}
 
@@ -333,7 +333,20 @@ int main()
 					window.draw(level1.landRectShapes[i]);
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
+					if (!level1.levelEnemies[i].circleInit) {
+						if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
+							player1.lives--;
+							lostLifesound.setBuffer(lostLifeBuffer);
+							player1.playerRect.setPosition(sf::Vector2f(170, 1600));
+							lostLifesound.play();
+						}
+						window.draw(level1.levelEnemies[i].enemySprite);
+						continue;
+					}
 					if (!level1.paused) {
+						//if(player1.playerRect.getPosition().x + enemy){
+						
+						//}
 						double timerDuration = (std::clock() - timerStart) / (double)CLOCKS_PER_SEC;
 						sf::Vector2f futurePos;
 						sf::CircleShape futureCircle = level1.levelEnemies[i].enemyCircle;

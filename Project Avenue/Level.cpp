@@ -116,27 +116,122 @@ int level::spawn(player *playerInLevel) {
 		landRectShapes.push_back(landRect7);
 		
 		sf::RectangleShape landRect8 = sf::RectangleShape(sf::Vector2f(200, 70));
-		landRect8.setPosition(sf::Vector2f(2000, 1450));
+		landRect8.setPosition(sf::Vector2f(2000, 1425));
 		landRect8.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect8);
 
 		sf::RectangleShape landRect9 = sf::RectangleShape(sf::Vector2f(100, 50));
-		landRect9.setPosition(sf::Vector2f(2400, 1265));
+		landRect9.setPosition(sf::Vector2f(2400, 1300));
 		landRect9.setFillColor(sf::Color::Color(120, 83, 23, 255));
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect9);
 
-		sf::RectangleShape landRect10 = sf::RectangleShape(sf::Vector2f(500, 350));
+		sf::RectangleShape landRect10 = sf::RectangleShape(sf::Vector2f(3000, 350));
 		landRect10.setPosition(sf::Vector2f(4700, 1290));
-		landRect10.setFillColor(sf::Color::Color(219, 220, 219, 100));
+		landRect10.setFillColor(sf::Color::Color(219, 220, 219, 100)); //cloud
 		landRectShapesSize++;
 		landRectShapes.push_back(landRect10);
+		
+		sf::RectangleShape landRect11 = sf::RectangleShape(sf::Vector2f(500,100));
+		landRect11.setPosition(sf::Vector2f(2700,1190));
+		landRect11.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect11);
+
+		sf::RectangleShape landRect12 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect12.setPosition(sf::Vector2f(3400, 1050));
+		landRect12.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect12);
+
+		sf::RectangleShape landRect13 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect13.setPosition(sf::Vector2f(3800, 950));
+		landRect13.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect13);
+
+		sf::RectangleShape landRect14 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect14.setPosition(sf::Vector2f(4300, 850));
+		landRect14.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect14);
+
+		sf::RectangleShape landRect15 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect15.setPosition(sf::Vector2f(4800, 800));
+		landRect15.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect15);
+
+		sf::RectangleShape landRect16 = sf::RectangleShape(sf::Vector2f(400, 50));
+		landRect16.setPosition(sf::Vector2f(5300, 800));
+		landRect16.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect16);
+
+		sf::RectangleShape landRect17 = sf::RectangleShape(sf::Vector2f(50, 100));
+		landRect17.setPosition(sf::Vector2f(5450, 700));
+		landRect17.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect17);
+
+		sf::RectangleShape landRect18 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect18.setPosition(sf::Vector2f(5950, 700));
+		landRect18.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect18);
+
+		sf::RectangleShape landRect19 = sf::RectangleShape(sf::Vector2f(50, 50));
+		landRect19.setPosition(sf::Vector2f(6200, 700));
+		landRect19.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect19);
+
+		sf::RectangleShape landRect20 = sf::RectangleShape(sf::Vector2f(200, 30));
+		landRect20.setPosition(sf::Vector2f(6600, 700));
+		landRect20.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect20);
+
+		sf::RectangleShape landRect21 = sf::RectangleShape(sf::Vector2f(200, 25));
+		landRect21.setPosition(sf::Vector2f(7100, 700));
+		landRect21.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect21);
+
+		sf::RectangleShape landRect22 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect22.setPosition(sf::Vector2f(7500, 700));
+		landRect22.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect22);
+
+		sf::RectangleShape landRect23 = sf::RectangleShape(sf::Vector2f(300, 50));
+		landRect23.setPosition(sf::Vector2f(8000, 850));
+		landRect23.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect23);
+
+		sf::RectangleShape landRect24 = sf::RectangleShape(sf::Vector2f(150, 50));
+		landRect24.setPosition(sf::Vector2f(8500, 1050));
+		landRect24.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect24);
+
+		sf::RectangleShape landRect25 = sf::RectangleShape(sf::Vector2f(150, 50));
+		landRect25.setPosition(sf::Vector2f(8800, 1350));
+		landRect25.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect25);
+			
+		sf::RectangleShape landRect26 = sf::RectangleShape(sf::Vector2f(150, 50));
+		landRect26.setPosition(sf::Vector2f(8800, 1550));
+		landRect26.setFillColor(sf::Color::Color(120, 83, 23, 255));
+		landRectShapesSize++;
+		landRectShapes.push_back(landRect26);
 
 		jumpPad jumpPad1(1, sf::Vector2f(landRect7.getPosition().x+50, landRect7.getPosition().y-90));
 		jumpPad1.specialSprite.setTexture(jumpPadTexture);
 		levelJumpPads.push_back(jumpPad1);
-
 
 
 		/*sf::RectangleShape landRect6 = sf::RectangleShape(sf::Vector2f(400, 100));
@@ -148,8 +243,28 @@ int level::spawn(player *playerInLevel) {
 		sf::RectangleShape landRect7 = sf::RectangleShape(sf::Vector2f(200, 100));
 		landRect7.setPosition(sf::Vector2f(1200, 400));
 		landRect7.setFillColor(sf::Color::Color(120, 83, 23, 255));
-		landRectShapesSize++;
+		landRectShapesSize++;z
 		landRectShapes.push_back(landRect7);*/
+
+		enemy spikePad1(2, sf::Vector2f(2900, 1060));
+		if (!spikePad1Texture.loadFromFile("Spikes.png")) {
+			throw std::runtime_error("Could not load Spikes.png");
+		}
+		spikePad1.enemySprite.setTexture(spikePad1Texture);
+		levelEnemies.push_back(spikePad1);
+
+		enemy spikePad2(2, sf::Vector2f(3850, 820));
+		spikePad2.enemySprite.setTexture(spikePad1Texture);
+		levelEnemies.push_back(spikePad2);
+
+		enemy spikePad3(2, sf::Vector2f(4500, 720));
+		spikePad3.enemySprite.setTexture(spikePad1Texture);
+		levelEnemies.push_back(spikePad3);
+
+		enemy spikePad4(2, sf::Vector2f(4500, 720));
+		spikePad4.enemySprite.setTexture(spikePad1Texture);
+		levelEnemies.push_back(spikePad4);
+
 
 		enemy enemy1(1, sf::Vector2f(2000, 1300));
 		levelEnemies.push_back(enemy1);
@@ -157,6 +272,7 @@ int level::spawn(player *playerInLevel) {
 		levelEnemies.push_back(enemy2);
 		enemy enemy3(1, sf::Vector2f(3000, 1300));
 		levelEnemies.push_back(enemy3);
+
 
 		if (!gemTexture.loadFromFile("gem.png")) {
 			throw std::runtime_error("Could not open gem texture file");

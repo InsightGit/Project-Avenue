@@ -32,6 +32,7 @@ class level {
 	sf::Texture finishGemTexture;
 	sf::Texture jumpPadTexture;
 	sf::Texture questionBlockTexture;
+	sf::Texture spikePad1Texture;
 	sf::Sprite initalGemHUD;
 	sf::Text initalGemText;
 	sf::View levelView = sf::View(sf::FloatRect(0, 76800,1366,768));
