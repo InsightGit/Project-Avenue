@@ -11,7 +11,8 @@ build:
   # before_script: 
   #   - apt update && apt -y install make autoconf libsfml-dev
   script: 
-    - g++ *.cpp *.hpp -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -o main
+    - cd 'Project Avenue'
+    - g++ *.cpp *.hpp -std=c++11 -lpthread -lsfml-system -lsfml-window -lsfml-graphics -lsfml-audio -o main
   artifacts:
     paths:
       - main
