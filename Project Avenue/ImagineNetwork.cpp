@@ -25,8 +25,10 @@ void imagineNetwork::connectingThread() {
 		std::string message;
 		std::string secondMessage;
 		while (!waitRoomReady) {
+			socketOccupied = true;
 			if (connectionSocket.receive(recievedPacket) != sf::Socket::Done) {
 				error = 3;
+				socketOccupied = false;
 				connectionSocket.disconnect();
 				std::cout << "Could not recieve data from Online Services!\n";
 			}
@@ -75,21 +77,36 @@ void imagineNetwork::connectingThread() {
 }
 
 void imagineNetwork::updateServerStatus() {
-	sf::Packet recievedPacket;
+	sf::Packet packetToRecieve;
+	sf::Packet packetToSend;
 	std::string message;
 	while (!serverReady && error==0) {
-		if (connectionSocket.receive(recievedPacket) != sf::Socket::Done) {
-			if (recievedPacket >> message) {
-				if (message == "ready") {
-					serverReady == true;
-					std::cout << "SERVER IS READY!\n";
+		if (!socketOccupied) {
+			socketOccupied = true;
+			if (connectionSocket.receive(packetToRecieve) == sf::Socket::Done) {
+				if (packetToRecieve >> message) {
+					if (message == "ready") {
+						packetToSend << std::string("ok");
+						if (connectionSocket.send(packetToSend) != sf::Socket::Done) {
+							connectionSocket.disconnect();
+							*sceneNum = 0;
+						}
+						serverReady == true;
+						std::cout << "SERVER IS READY!\n";
+					}
 				}
 			}
-		}
+			else {
+				connectionSocket.disconnect();
+				*sceneNum = 0;
+			}
+			socketOccupied = false;
+		}	
 	}
 }
 
-imagineNetwork::imagineNetwork(sf::Font fontToUse, player *mainPlayer, const char *IpAddress, const int port) {
+imagineNetwork::imagineNetwork(sf::Font fontToUse, player *mainPlayer, int *mainSceneNum, const char *IpAddress, const int port) {
+	sceneNum = mainSceneNum;
 #ifdef DEBUG
 	std::cout << "Bound to " connectionSocket.getLocalPort() << "\n";
 #endif // DEBUG
@@ -101,8 +118,14 @@ void imagineNetwork::whenReady(){
 	if (error == 0) {
 		sf::Packet packetToSend;
 		packetToSend << std::string("ready");
-		connectionSocket.send(packetToSend);
-		waitRoom.readyLight.setTexture(waitRoom.landTextures[1]);
+		socketOccupied = true;
+		if (connectionSocket.send(packetToSend) != sf::Socket::Done) {
+			*sceneNum = 0;
+		}
+		else {
+			waitRoom.readyLight.setTexture(waitRoom.landTextures[1]);
+		}
+		socketOccupied = false;
 	}
 }
 
@@ -111,12 +134,14 @@ void imagineNetwork::arenaLoadingThread() {
 	std::string message;
 	arenaLoading = true;
 	if (serverReady) {
-		if (connectionSocket.receive(recievedPacket) != sf::Socket::Done) {
+		socketOccupied = true;
+		if (connectionSocket.receive(recievedPacket) == sf::Socket::Done) {
 			if (recievedPacket >> message) {
 				*arenaId = message;
 				arenaLoaded = true;
 			}
 		}
+		socketOccupied = false;
 	}
 }
 
@@ -129,12 +154,14 @@ void imagineNetwork::playerInfoThread() {
 	if (arenaLoaded) {
 		while (gameOn) {
 			packetToSend << player1->playerRect.getPosition().x << player1->playerRect.getPosition().y;
+			socketOccupied = true;
 			if (connectionSocket.send(packetToSend) != sf::Socket::Done) {
 				throw std::runtime_error("Could not send packet to server");
 			}
 			if (connectionSocket.receive(packetRecieved) != sf::Socket::Done) {
 				throw std::runtime_error("Could not recieve packet from server");
 			}
+			socketOccupied = false;
 			if (packetRecieved >> player2x >> player2y) {
 				player2.playerRect.setPosition(sf::Vector2f(player2x,player2y));
 			}

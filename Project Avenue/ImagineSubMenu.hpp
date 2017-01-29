@@ -16,7 +16,7 @@ namespace imagine {
 		sf::RectangleShape miniScreen = sf::RectangleShape(sf::Vector2f(300, 300));
 
 		int activePosition = 1;
-		int optionSize = 0;
+		int optionSize = 2;
 
 		subMenu(sf::Font font,sf::View *currentView);
 

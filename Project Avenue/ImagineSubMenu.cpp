@@ -8,14 +8,16 @@ imagine::subMenu::subMenu(sf::Font currentFont, sf::View *currentView) {
 	miniScreen.setFillColor(sf::Color::Black);
 	//fadedBackgroudTexture
 
+	continueText.setFont(defaultFont);
 	continueText.setString("Continue");
-	continueText.setPosition(sf::Vector2f(position.x+50,position.y+100));
+	continueText.setPosition(sf::Vector2f(position.x+100,position.y+100));
 	continueText.setCharacterSize(20);
 	continueText.setStyle(sf::Text::Regular);
 	continueText.setFillColor(sf::Color::White);
 
+	returnText.setFont(defaultFont);
 	returnText.setString("Return to Main Menu");
-	returnText.setPosition(sf::Vector2f(position.x + 50, position.y + 200));
+	returnText.setPosition(sf::Vector2f(position.x + 100, position.y + 200));
 	returnText.setCharacterSize(15);
 	returnText.setStyle(sf::Text::Regular);
 	returnText.setFillColor(sf::Color::Red);

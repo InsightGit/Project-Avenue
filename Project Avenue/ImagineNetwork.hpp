@@ -21,16 +21,18 @@ public:
 	bool arenaLoaded = false;
 	bool gettingInfo = false;
 	bool gameOn = false;
+	bool socketOccupied = false;
 	player *player1;
 	player player2;
 	std::string *waitRoomId = new std::string;
 	std::string *arenaId = new std::string;
 	imagine::waitRoom waitRoom;
+	int *sceneNum;
 	imagine::arena arena;
 
 	sf::Font defaultFont;
 
-	imagineNetwork(sf::Font fontToUse, player *mainPlayer, const char *IpAddress = "avenue.infernostudios.me", const int port = 59000);
+	imagineNetwork(sf::Font fontToUse, player *mainPlayer, int *mainSceneNum, const char *IpAddress = "avenue.infernostudios.me", const int port = 59000);
 	imagineNetwork();
 
 	//virtual ~imagineNetwork();

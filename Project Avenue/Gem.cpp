@@ -100,4 +100,7 @@ void gem::update() {
 	if (protectGem) {
 		gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
 	}
+	if (collected) {
+ 		gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
+	}
 }

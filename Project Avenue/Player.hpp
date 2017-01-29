@@ -8,7 +8,7 @@ class weapon;
 class jumpPad;
 class player {
 public:
-	int lives = 3;
+	int lives = 5;
 	int playerLevel;
 	int walkSpeed = 10;
 	int jumpSpeed = 20;

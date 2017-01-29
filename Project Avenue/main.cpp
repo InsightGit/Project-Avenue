@@ -18,6 +18,10 @@ void threadPlaceholder() {
 	std::cout << "Initlized thread\n";
 }
 
+void enemyCheck() {
+
+}
+
 
 int main()
 {
@@ -37,9 +41,9 @@ int main()
 	//sf::Sprite backgroundSprite;
 	player player1(sf::Vector2f(170,1500));
 	weapon weapon1(1);
-	imagineNetwork *network = new imagineNetwork(defaultFont,&player1);
 	std::thread *gettingInfo = new std::thread(threadPlaceholder);
 	int sceneNum = 0;
+	imagineNetwork *network = new imagineNetwork(defaultFont, &player1, &sceneNum);
 	int playerIntersectCount = 0;
 	int pastPosFrameCount = 0;
 	bool deletedMainMenu = false;
@@ -49,6 +53,7 @@ int main()
 	//bool movingRightPermitted = true;
 	//bool movingLeftPermitted = true;
 	bool firstTimeSpawn = true;
+	bool checkerDeployed = false;
 	sf::Clock clock;
 	sf::Clock mainMenuTimerClock;
 	sf::Clock levelScreenTimerClock;
@@ -73,6 +78,7 @@ int main()
 	//backgroundSprite.setPosition(sf::Vector2f(0, 0));
 	mainMenu *mainM = new mainMenu(defaultFont);
 	std::clock_t timerStart = std::clock();
+	window.setFramerateLimit(60);
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -91,6 +97,28 @@ int main()
 
 		if (sceneNum == 1 && level1.subscene == 1) {
 			if (!level1.levelFinished) {
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::W) || sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+					if (level1.paused) {
+						pauseSubMenu->move(imagine::types::Up);
+					}
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::S) || sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+					if (level1.paused) {
+						pauseSubMenu->move(imagine::types::Down);
+					}
+				}
+				if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+					if (level1.paused) {
+						if (pauseSubMenu->activePosition == 1) {
+							level1.paused = false;
+							delete pauseSubMenu;
+							subMenuDeleted = true;
+						}
+						else if (pauseSubMenu->activePosition == 2) {
+							sceneNum = 0;
+						}
+					}
+				}
 				if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
 					if (player1.movingLeftPermitted) {
 						player1.playerRect.setPosition(sf::Vector2f(player1.playerRect.getPosition().x - player1.walkSpeed, player1.playerRect.getPosition().y));
@@ -193,6 +221,9 @@ int main()
 		window.clear(sf::Color::Color(20,146,210,1));
 
 		//std::cout << sceneNum << "\n";
+		if (network->serverReady) {
+			sceneNum = 3;
+		}
 		if (sceneNum == 0) {
 			//window.draw(backgroundSprite);
 			window.setView(mainM->mainMenuView);
@@ -243,19 +274,11 @@ int main()
 
 				window.setView(level1.levelView);
 
-				if (level1.paused && !subMenuDeleted) {
-					window.draw(pauseSubMenu->activeCircle);
-					window.draw(pauseSubMenu->continueText);
-					window.draw(pauseSubMenu->returnText);
-					window.draw(pauseSubMenu->miniScreen);
-					player1.movingControlProtected = false;
-					player1.movingLeftPermitted = false;
-					player1.movingRightPermitted = false;
-				}
+
 
 				playerIntersectCount = 0;
 				for (int i = 0; level1.landRectShapesSize > i; i++) {
-					if (i == 26){
+					if (i == 31){
 						break;
 					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.landRectShapes[i].getGlobalBounds())) {
@@ -284,6 +307,11 @@ int main()
 						}
 					}
 				}
+				if (level1.paused) {
+					player1.movingLeftPermitted = false;
+					player1.movingRightPermitted = false;
+				}
+
 				if (!player1.movingLeftPermitted && !player1.movingRightPermitted && player1.movingControlProtected) {
 					player1.movingRightPermitted = true;
 					player1.movingLeftPermitted = true;
@@ -296,15 +324,19 @@ int main()
 				}
 
 				for (int i = 0; level1.levelGems.size() > i; i++) {
+					if (i == 3) {
+						break;
+					}
 					if (player1.playerRect.getGlobalBounds().intersects(level1.levelGems[i].gemSprite.getGlobalBounds())) {
 						/*if (level1.levelGems[i].gemId != -858993460) {
 							std::cout << "id=" << std::to_string(level1.levelGems[i].gemId);
 						}*/
- 						if (level1.levelGems[i].gemId == 2 && gemAddLimitClock.getElapsedTime().asSeconds() >= 0.1) {
-							gemAddLimitClock.restart();
-						}
-						else if(level1.levelGems[i].gemId == 1 && gemAddLimitClock.getElapsedTime().asSeconds() >= 0.1) {
+ 						if (level1.levelGems[i].gemId == 2) {
 							level1.levelGems[i].onCollect(&player1, &coinCollectBuffer);
+						}
+						if(level1.levelGems[i].gemId == 1 && gemAddLimitClock.getElapsedTime().asSeconds() >= 0.1) {
+							level1.levelGems[i].onCollect(&player1, &coinCollectBuffer);
+							level1.levelGems[i].gemSprite.setPosition(sf::Vector2f(-1000000000, -1000000000));
 							gemAddLimitClock.restart();
 						}
 					}
@@ -334,7 +366,7 @@ int main()
 				}
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					if (!level1.levelEnemies[i].circleInit) {
-						if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemyCircle.getGlobalBounds())) {
+						if (player1.playerRect.getGlobalBounds().intersects(level1.levelEnemies[i].enemySprite.getGlobalBounds())) {
 							player1.lives--;
 							lostLifesound.setBuffer(lostLifeBuffer);
 							player1.playerRect.setPosition(sf::Vector2f(170, 1600));
@@ -470,6 +502,16 @@ int main()
 				window.draw(level1.initalGemText);
 				window.draw(level1.initalHeartText);
 
+				if (level1.paused && !subMenuDeleted) {
+					window.draw(pauseSubMenu->miniScreen);
+					window.draw(pauseSubMenu->activeCircle);
+					window.draw(pauseSubMenu->continueText);
+					window.draw(pauseSubMenu->returnText);
+					player1.movingControlProtected = false;
+					player1.movingLeftPermitted = false;
+					player1.movingRightPermitted = false;
+				}
+
 				window.display();
 				for (int i = 0; level1.levelEnemies.size() > i; i++) {
 					level1.levelEnemies[i].limitDirectionChanges = false;
@@ -479,6 +521,10 @@ int main()
 		else if (sceneNum==2) {
 			std::thread *connecting = new std::thread(threadPlaceholder);
 			std::thread *checker = new std::thread(threadPlaceholder);
+			if (network->connected && !checkerDeployed) {
+				checker = new std::thread(&imagineNetwork::updateServerStatus, network);
+				checkerDeployed = true;
+			}
 			sf::Text connectingText;
 			if (!network->connected) {
 				if (!network->connecting) {
@@ -505,10 +551,6 @@ int main()
 			else if (network->waitRoomReady && network->connected && !network->serverReady) {
 				if (!network->waitRoom.spawned) {
 					network->waitRoom.spawn(&player1);
-					checker = new std::thread(&imagineNetwork::updateServerStatus,network);
-				}
-				if (network->serverReady) {
-					sceneNum = 3;
 				}
 				playerIntersectCount = 0;
 				for (int i = 0; network->waitRoom.landRects.size() > i; i++) {
@@ -593,6 +635,7 @@ int main()
 			}
 			window.display();
 		}
+
 		else if (sceneNum == 3) {
 			std::thread *arenaLoading = new std::thread(threadPlaceholder);
 			if (!network->arenaLoading) {
